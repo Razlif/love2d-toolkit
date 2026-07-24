@@ -1,5 +1,11 @@
 .env
 *.log
 *.tmp
-qa/reports/
-asset_lab/lab_assets/
+qa/reports/*
+!qa/reports/.gitkeep
+
+asset_lab/lab_assets/*
+!asset_lab/lab_assets/.gitkeep
+!asset_lab/lab_assets/*/
+asset_lab/lab_assets/*/*
+!asset_lab/lab_assets/*/.gitkeep
