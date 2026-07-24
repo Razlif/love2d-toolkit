@@ -9,3 +9,10 @@ asset_lab/lab_assets/*
 !asset_lab/lab_assets/*/
 asset_lab/lab_assets/*/*
 !asset_lab/lab_assets/*/.gitkeep
+
+# Local Graphify context artifacts.
+graphify-out/
+.graphify*
+
+# Local Codex skills/config.
+.codex/
