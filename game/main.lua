@@ -1,0 +1,2 @@
+-- Love callback entry point.
+-- Keep this thin: forward load/update/draw/input to game_loop.lua.

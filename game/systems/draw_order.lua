@@ -1,0 +1,1 @@
+-- Sorts visible entities using their ground position or configured anchor.

@@ -1,0 +1,1 @@
+-- Positions and scrolls background layers relative to camera movement.

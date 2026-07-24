@@ -1,0 +1,1 @@
+-- Tracks the active game state and handles transitions between states.

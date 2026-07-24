@@ -1,0 +1,2 @@
+-- Whole-game flow coordinator.
+-- Receives calls from main.lua and forwards work to the active mode.

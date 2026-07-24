@@ -1,0 +1,1 @@
+-- Displays the opening splash screen before the main menu.

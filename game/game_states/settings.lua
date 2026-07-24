@@ -1,0 +1,1 @@
+-- Handles game settings and player preferences.

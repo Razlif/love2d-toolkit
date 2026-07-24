@@ -1,0 +1,1 @@
+-- Defines invisible areas that activate events when their conditions are met.

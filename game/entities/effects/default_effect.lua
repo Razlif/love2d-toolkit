@@ -1,0 +1,1 @@
+-- Defines the shared starting structure and behavior for temporary visual effects.

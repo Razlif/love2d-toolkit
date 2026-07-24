@@ -1,0 +1,1 @@
+-- Detects and reports overlaps without deciding the gameplay response.

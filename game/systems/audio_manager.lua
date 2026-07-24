@@ -1,0 +1,1 @@
+-- Loads, plays, stops, and adjusts music and sound effects.

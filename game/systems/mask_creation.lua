@@ -1,0 +1,1 @@
+-- Creates per-frame masks, bounds, anchors, and sensor data for assets.

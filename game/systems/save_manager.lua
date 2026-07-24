@@ -1,0 +1,1 @@
+-- Reads, writes, and manages saved game data.

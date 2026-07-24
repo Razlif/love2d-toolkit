@@ -1,0 +1,1 @@
+-- Displays contextual information near a selected or hovered element.

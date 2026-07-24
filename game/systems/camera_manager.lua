@@ -1,0 +1,1 @@
+-- Tracks the camera position and determines the visible part of the world.

@@ -1,0 +1,1 @@
+-- Tracks and updates the active animation and frame for each entity.

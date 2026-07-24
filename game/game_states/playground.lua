@@ -1,0 +1,1 @@
+-- Provides a safe state for testing game systems and assets.

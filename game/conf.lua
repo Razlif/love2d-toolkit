@@ -1,0 +1,1 @@
+-- Love project configuration: window title, size, identity, and modules.

@@ -1,0 +1,5 @@
+.env
+*.log
+*.tmp
+qa/reports/
+asset_lab/lab_assets/

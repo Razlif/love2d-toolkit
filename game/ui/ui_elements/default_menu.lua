@@ -1,0 +1,1 @@
+-- Defines reusable menu navigation, selection, and option activation.

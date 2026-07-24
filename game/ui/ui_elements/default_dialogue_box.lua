@@ -1,0 +1,1 @@
+-- Defines the standard display for speaker names and dialogue text.

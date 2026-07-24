@@ -1,0 +1,1 @@
+-- Controls and draws visual fades or wipes between game states.

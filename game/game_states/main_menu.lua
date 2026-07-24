@@ -1,0 +1,1 @@
+-- Handles the main menu state and its navigation.
