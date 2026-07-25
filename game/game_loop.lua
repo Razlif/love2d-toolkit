@@ -8,7 +8,7 @@ local GameLoop = {}
 
 function GameLoop.load(debug_config, ...)
   DebugOverlay.configure(debug_config)
-  states_manager.load(...)
+  states_manager.load({ cutscene_id = debug_config and debug_config.cutscene_id }, ...)
 end
 
 function GameLoop.update(dt)

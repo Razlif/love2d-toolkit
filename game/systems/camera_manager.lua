@@ -16,6 +16,7 @@ function CameraManager.new(config)
     height = config.height or 540,
     x = 0,
     y = 0,
+    zoom = config.zoom or 1,
     target = nil,
     bounds = config.bounds,
     smoothing = config.smoothing or 8,
@@ -39,16 +40,16 @@ end
 
 function CameraManager:update(dt)
   if self.target then
-    local desired_x = self.target.x - self.width / 2
-    local desired_y = self.target.ground_y - self.height / 2
+    local desired_x = self.target.x - self.width / (2 * self.zoom)
+    local desired_y = self.target.ground_y - self.height / (2 * self.zoom)
     local amount = math.min(1, dt * self.smoothing)
     self.x = self.x + (desired_x - self.x) * amount
     self.y = self.y + (desired_y - self.y) * amount
   end
 
   if self.bounds then
-    self.x = clamp(self.x, self.bounds.left, self.bounds.right - self.width)
-    self.y = clamp(self.y, self.bounds.top, self.bounds.bottom - self.height)
+    self.x = clamp(self.x, self.bounds.left, self.bounds.right - self.width / self.zoom)
+    self.y = clamp(self.y, self.bounds.top, self.bounds.bottom - self.height / self.zoom)
   end
 
   if self.shake_remaining > 0 then
@@ -63,6 +64,21 @@ function CameraManager:update(dt)
   end
 end
 
+function CameraManager:set_zoom(zoom)
+  assert(zoom and zoom > 0, "Camera zoom must be positive")
+  self.zoom = zoom
+end
+
+function CameraManager:set_center(x, ground_y)
+  self.x = x - self.width / (2 * self.zoom)
+  self.y = ground_y - self.height / (2 * self.zoom)
+end
+
+function CameraManager:get_center()
+  return self.x + self.width / (2 * self.zoom),
+    self.y + self.height / (2 * self.zoom)
+end
+
 function CameraManager:shake(amplitude, duration)
   assert(amplitude >= 0 and duration > 0, "Camera shake requires a positive duration")
   self.shake_amplitude = amplitude
@@ -72,8 +88,11 @@ function CameraManager:shake(amplitude, duration)
 end
 
 function CameraManager:attach()
+  local center_x, center_y = self:get_center()
   love.graphics.push()
-  love.graphics.translate(-self.x + self.shake_x, -self.y + self.shake_y)
+  love.graphics.translate(self.width / 2 + self.shake_x, self.height / 2 + self.shake_y)
+  love.graphics.scale(self.zoom, self.zoom)
+  love.graphics.translate(-center_x, -center_y)
 end
 
 function CameraManager:detach()
@@ -81,11 +100,15 @@ function CameraManager:detach()
 end
 
 function CameraManager:world_to_screen(x, y)
-  return x - self.x + self.shake_x, y - self.y + self.shake_y
+  local center_x, center_y = self:get_center()
+  return (x - center_x) * self.zoom + self.width / 2 + self.shake_x,
+    (y - center_y) * self.zoom + self.height / 2 + self.shake_y
 end
 
 function CameraManager:screen_to_world(x, y)
-  return x + self.x - self.shake_x, y + self.y - self.shake_y
+  local center_x, center_y = self:get_center()
+  return (x - self.width / 2 - self.shake_x) / self.zoom + center_x,
+    (y - self.height / 2 - self.shake_y) / self.zoom + center_y
 end
 
 return CameraManager

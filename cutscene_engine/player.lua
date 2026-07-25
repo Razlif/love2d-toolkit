@@ -1,0 +1,164 @@
+-- Deterministic timeline player for declarative cutscene scenes.
+local asset_manifest = require("game_data.asset_manifest")
+local AssetLoader = require("game.systems.asset_loader")
+local AssetActor = require("cutscene_engine.actor")
+local Commands = require("cutscene_engine.commands")
+local CameraManager = require("game.systems.camera_manager")
+local DrawOrder = require("game.systems.draw_order")
+local Effect = require("game.entities.effects.effect")
+local ParallaxManager = require("game.systems.parallax")
+
+local Player = {}
+Player.__index = Player
+
+local function sorted_keys(table_value)
+  local keys = {}
+  for key in pairs(table_value or {}) do keys[#keys + 1] = key end
+  table.sort(keys)
+  return keys
+end
+
+function Player.new(scene, options)
+  options = options or {}
+  AssetLoader.load_manifest(asset_manifest)
+  local player = setmetatable({
+    scene = scene,
+    actors = {},
+    actor_order = {},
+    effects = {},
+    dialogue = nil,
+    timeline_index = 1,
+    active_command = nil,
+    finished = false,
+    return_state = options.return_state or "playground",
+    fade = { alpha = 0, color = { 0, 0, 0 } }
+  }, Player)
+
+  for id, data in pairs(scene.actors or {}) do
+    data.id = id
+    local gameplay_definition = require("game_data.characters." .. data.asset_id)
+    data.movement = data.movement or gameplay_definition.movement
+    data.hop_animation = data.hop_animation or gameplay_definition.hop_animation
+    local asset = AssetLoader.get_character(data.asset_id)
+    player.actors[id] = AssetActor.new(data, asset)
+  end
+  player.actor_order = sorted_keys(player.actors)
+
+  local camera_data = scene.camera or {}
+  player.camera = CameraManager.new({
+    width = camera_data.width or 960,
+    height = camera_data.height or 540,
+    bounds = camera_data.bounds,
+    smoothing = camera_data.smoothing or 8,
+    zoom = camera_data.zoom or 1
+  })
+  local camera_position = camera_data.position
+  if camera_position then
+    player.camera:set_center(camera_position.x, camera_position.ground_y)
+  end
+
+  local background = scene.background and asset_manifest.backgrounds[scene.background.asset_id]
+  player.parallax = ParallaxManager.new(background and {
+    {
+      id = background.id,
+      image_path = background.image.path,
+      speed_x = 1,
+      speed_y = 1,
+      repeat_x = false,
+      repeat_y = false
+    }
+  } or {})
+  player.parallax:set_camera(player.camera)
+  return player
+end
+
+function Player:spawn_effect(command)
+  local manifest_definition = asset_manifest.effects[command.asset_id]
+  assert(manifest_definition, "Unknown cutscene effect: " .. tostring(command.asset_id))
+  local animation_name = command.animation
+  if not animation_name then
+    for name in pairs(manifest_definition.animations or {}) do animation_name = name break end
+  end
+  local definition = {
+    asset_id = command.asset_id,
+    position = command.position or { x = 0, ground_y = 0, z = 0 },
+    scale = command.scale or 1,
+    anchor = command.anchor or { x = 32, y = 32 },
+    animation = animation_name,
+    draw_layer = command.draw_layer or 30,
+    flicker = command.flicker
+  }
+  local effect = Effect.new(definition, AssetLoader.get_effect(command.asset_id))
+  effect:trigger()
+  self.effects[#self.effects + 1] = effect
+end
+
+function Player:start_next_command()
+  local command = self.scene.timeline[self.timeline_index]
+  if not command then
+    self.finished = true
+    return
+  end
+  Commands.validate(command, self.timeline_index)
+  self.timeline_index = self.timeline_index + 1
+  self.active_command = Commands.begin(self, command)
+  if self.active_command.done then
+    self.active_command = nil
+    self:start_next_command()
+  end
+end
+
+function Player:update(dt)
+  if self.finished then return end
+  for _, id in ipairs(self.actor_order) do self.actors[id]:update(dt) end
+  for index = #self.effects, 1, -1 do
+    local effect = self.effects[index]
+    effect:update(dt)
+    if effect:is_finished() then table.remove(self.effects, index) end
+  end
+
+  if not self.active_command then self:start_next_command() end
+  if self.active_command then
+    local command = self.scene.timeline[self.timeline_index - 1]
+    if Commands.update(self, command, self.active_command, dt) then
+      if command.command == "say" then self.dialogue = nil end
+      self.active_command = nil
+    end
+  end
+  self.camera:update(dt)
+  self.parallax:update(dt)
+end
+
+function Player:draw()
+  love.graphics.clear(0.08, 0.1, 0.14, 1)
+  self.camera:attach()
+  self.parallax:draw()
+  local drawables = {}
+  for _, id in ipairs(self.actor_order) do drawables[#drawables + 1] = self.actors[id] end
+  for _, effect in ipairs(self.effects) do drawables[#drawables + 1] = effect end
+  for _, drawable in ipairs(DrawOrder.sort(drawables)) do drawable:draw() end
+  self.camera:detach()
+  if self.dialogue then self.dialogue:draw() end
+  if self.fade.alpha > 0 then
+    love.graphics.setColor(self.fade.color[1], self.fade.color[2], self.fade.color[3], self.fade.alpha)
+    love.graphics.rectangle("fill", 0, 0, self.camera.width, self.camera.height)
+  end
+end
+
+function Player:skip()
+  self.finished = true
+  self.dialogue = nil
+end
+
+function Player:is_finished()
+  return self.finished
+end
+
+function Player:get_debug_context()
+  local entities = {}
+  for _, id in ipairs(self.actor_order) do entities[#entities + 1] = self.actors[id] end
+  for _, effect in ipairs(self.effects) do entities[#entities + 1] = effect end
+  return { entities = entities, camera = self.camera, collision_events = {} }
+end
+
+return Player

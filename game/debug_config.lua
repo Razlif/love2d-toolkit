@@ -12,7 +12,8 @@ local function base_config()
     entities = false,
     camera = false,
     input = false,
-    state = false
+    state = false,
+    cutscene_id = nil
   }
 end
 
@@ -25,7 +26,9 @@ end
 
 function DebugConfig.from_args(arguments)
   local config = base_config()
-  for _, argument in ipairs(arguments or {}) do
+  local index = 1
+  while index <= #(arguments or {}) do
+    local argument = arguments[index]
     if argument == "--debug" then
       enable_all(config)
     elseif argument == "--debug-masks" then
@@ -50,6 +53,11 @@ function DebugConfig.from_args(arguments)
       config.enabled = true
       config.state = true
     end
+    if argument == "--cutscene" then
+      config.cutscene_id = arguments[index + 1]
+      index = index + 1
+    end
+    index = index + 1
   end
   return config
 end

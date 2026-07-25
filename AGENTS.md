@@ -169,3 +169,12 @@ This project may have a local knowledge graph in `graphify-out/`.
 - After meaningful code changes, run `graphify . --code-only` or
   `graphify update .` if available.
 - Do not run report, HTML, or community generation unless the user asks.
+
+## Cutscene Engine
+
+- Scene files live in `cutscene_engine/scenes/` and use declarative Lua timelines.
+- Validate a scene before previewing it with `python cutscene_engine/tools/validate_scene.py duck_slime_intro`.
+- Preview the example inside the normal Love2D runtime with `lovec . --cutscene duck_slime_intro`.
+- Preview the date scene with `lovec . --cutscene duck_slime_date`.
+- Cutscene actors reuse generic rendering systems from `game/`, but never gameplay controllers, AI, or gameplay collision responses.
+- Keep dialogue, movement, camera commands, and effects in the scene timeline so scenes remain easy to inspect and reorder.

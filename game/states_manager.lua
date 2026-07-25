@@ -7,7 +7,8 @@ local StatesManager = {
 }
 
 local states = {
-  playground = require("game.game_states.playground")
+  playground = require("game.game_states.playground"),
+  cutscene = require("game.game_states.cutscene")
 }
 
 local overlays = {
@@ -27,8 +28,12 @@ function StatesManager.change(name, ...)
   end
 end
 
-function StatesManager.load(...)
-  StatesManager.change("playground", ...)
+function StatesManager.load(options, ...)
+  if options and options.cutscene_id then
+    StatesManager.change("cutscene", options.cutscene_id, ...)
+  else
+    StatesManager.change("playground", ...)
+  end
 end
 
 function StatesManager.update(dt)
