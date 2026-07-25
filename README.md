@@ -1,43 +1,52 @@
 # Love2D Toolkit
 
-A small Love2D game template with:
+A small Love2D template for building 2.5D games with an AI coding agent.
 
-- A reusable 2.5D game foundation.
+It includes:
+
+- A reusable game foundation.
 - Asset Lab for images, animations, and audio.
-- A declarative cutscene engine.
+- A cutscene engine.
 - Debugging and QA helpers.
 
-The included duck, slime, background, bomb, music, and cutscene are examples.
+The duck, slime, background, bomb, music, and cutscene are examples.
 
 ## Boot
-
-Clone the repository:
 
 ```cmd
 git clone https://github.com/Razlif/love2d-toolkit.git
 cd love2d-toolkit
-```
-
-Run the example:
-
-```cmd
 love .
-```
-
-Run a cutscene directly:
-
-```cmd
-lovec . --cutscene duck_slime_date
 ```
 
 ## Start With The Agent
 
-Ask the agent:
+Ask:
 
-> Read the repository, read the root documentation, inspect the Graphify graph,
-> and explain how this toolkit is organized.
+> Read the repository and root documentation. Explain how this toolkit is organized.
 
-Graphify is local context for the agent. It is not a game asset or deliverable.
+If Graphify is installed and `graphify-out/graph.json` exists, the agent can
+use it for local context. Graphify is optional.
+
+## Typical Agent Workflow
+
+1. Set up the repository and ask the agent to read the code, root docs, and
+   game lore.
+
+2. Open Asset Lab. Ask the agent to create characters, props, backgrounds,
+   effects, animations, and audio.
+
+3. Preview the results in Asset Lab. Iterate with the agent until the assets
+   are right.
+
+4. Ask the agent to promote the selected assets into the game.
+
+5. Ask the agent to build game states, levels, interactions, and systems around
+   those assets.
+
+6. Ask the agent to create cutscenes and connect them to the game.
+
+7. Run the game, tests, and debug views. Continue iterating with the agent.
 
 ## Asset Lab
 
@@ -45,30 +54,29 @@ Open `asset_lab/index.html` in a browser.
 
 ![Asset Lab preview](asset_lab/asset_lab_screenshot.png)
 
-The viewer shows characters, props, backgrounds, effects, image versions,
-sprite sheets, and GIF animation previews. After refresh, it opens the last
-created asset so the agent and user can inspect the newest result quickly.
-The Audio Library button shows searchable candidates with play controls,
-source, creator, license, and attribution information.
+Asset Lab displays:
 
-Ask the agent to:
+- Characters, props, backgrounds, and effects.
+- Image versions and sprite sheets.
+- GIF animation previews.
+- The last-created asset after refresh.
+- Audio candidates with preview, source, license, and attribution data.
 
-> Read `asset_lab/manifest.json`, validate Asset Lab, and explain the available assets.
+Ask:
 
-Useful commands:
+> Read `asset_lab/manifest.json`, validate Asset Lab, and explain what is available.
+
+The agent can then create, inspect, and promote assets using the helpers:
 
 ```cmd
 python asset_lab/helpers/validate_lab_assets.py
-python asset_lab/helpers/export_browser_manifest.py
-python asset_lab/helpers/sync_manifest.py --report
-python asset_lab/helpers/create_lab_asset.py create-new --provider self --type effect --name magic_poof --prompt "small magic poof"
-python asset_lab/helpers/create_lab_asset.py add-image-version --provider self --type character --name crystal_knight --mode with_reference --source-image-version 1 --prompt "blue crystal armor"
-python asset_lab/helpers/create_lab_asset.py create-animation --provider self --type character --name crystal_knight --animation walk --source-image-version 1 --prompt "walking"
-python asset_lab/helpers/promote_lab_asset.py --operation promote-new --type effect --asset-id magic_poof --image-version 1
+python asset_lab/helpers/create_lab_asset.py --help
+python asset_lab/helpers/promote_lab_asset.py --help
+python asset_lab/helpers/audio_search.py --help
+python asset_lab/helpers/promote_audio_asset.py --help
 ```
 
-Use the agent to create, inspect, and promote assets. It should read the
-manifest first and use the helper commands rather than guessing paths.
+The agent should read the manifest first and never guess asset paths.
 
 See [ASSET_LAB_GUIDE.md](ASSET_LAB_GUIDE.md) and
 [AUDIO_WORKFLOW.md](AUDIO_WORKFLOW.md).
@@ -77,28 +85,35 @@ See [ASSET_LAB_GUIDE.md](ASSET_LAB_GUIDE.md) and
 
 Cutscenes are declarative Lua scenes in `cutscene_engine/scenes/`.
 
-Ask the agent to edit a scene, then validate and preview it:
+Ask the agent to edit a scene, validate it, and preview it:
 
 ```cmd
 python cutscene_engine/tools/validate_scene.py duck_slime_date
 lovec . --cutscene duck_slime_date
 ```
 
-The engine reuses the game systems for actors, movement, animation, camera,
-dialogue, effects, music, and sound.
+The engine reuses game actors, animation, movement, camera, dialogue, effects,
+music, and sound.
 
 See [CUTSCENE_ENGINE_GUIDE.md](CUTSCENE_ENGINE_GUIDE.md).
 
 ## Game Design
 
-Use `game_lore/` for story, characters, world rules, and design context. Ask
-the agent to read the lore before changing game behavior or writing scenes.
+Use `game_lore/` for story, characters, world rules, and design context.
 
-The template is designed around small reusable systems, literal data files,
-inspectable scenes, and fast agent-assisted iteration.
+Ask the agent to read the lore before changing game behavior or writing scenes.
+
+## Supported Cutscene Commands
+
+`wait` · `move` · `face` · `play_animation` · `say` · `camera_move` ·
+`camera_follow` · `camera_shake` · `play_effect` · `fade` · `play_sound` ·
+`play_music` · `stop_music`
 
 ## More Docs
 
 - [LOVE2D_TEMPLATE_TUTORIAL.md](LOVE2D_TEMPLATE_TUTORIAL.md)
+- [ASSET_LAB_GUIDE.md](ASSET_LAB_GUIDE.md)
+- [AUDIO_WORKFLOW.md](AUDIO_WORKFLOW.md)
+- [CUTSCENE_ENGINE_GUIDE.md](CUTSCENE_ENGINE_GUIDE.md)
 - [TESTING_AND_DEBUGGING.md](TESTING_AND_DEBUGGING.md)
 - [AGENTS.md](AGENTS.md)
