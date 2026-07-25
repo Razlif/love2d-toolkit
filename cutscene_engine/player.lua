@@ -7,6 +7,7 @@ local CameraManager = require("game.systems.camera_manager")
 local DrawOrder = require("game.systems.draw_order")
 local Effect = require("game.entities.effects.effect")
 local ParallaxManager = require("game.systems.parallax")
+local AudioManager = require("game.systems.audio_manager")
 
 local Player = {}
 Player.__index = Player
@@ -21,6 +22,7 @@ end
 function Player.new(scene, options)
   options = options or {}
   AssetLoader.load_manifest(asset_manifest)
+  AudioManager.load_manifest(asset_manifest)
   local player = setmetatable({
     scene = scene,
     actors = {},

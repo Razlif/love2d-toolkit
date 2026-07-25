@@ -35,6 +35,7 @@ return {
   },
 
   timeline = {
+    { command = "play_music", music_id = "intro_music", loop = true, volume = 0.8 },
     { command = "camera_zoom", zoom = 2, actor = "duck", duration = 1 },
     {
       command = "say",
@@ -78,6 +79,7 @@ return {
     { command = "camera_zoom", zoom = 1, focus_x = 835, focus_ground_y = 766, duration = 0.8 },
     { command = "say", actor = "duck", text = "Why, God! Why!", style = "card", duration = 2.2 },
     { command = "fade", alpha = 1, duration = 1.5 },
+    { command = "stop_music", fade = 0.5 },
     { command = "wait", duration = 1 }
   }
 }

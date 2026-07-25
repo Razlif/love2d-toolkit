@@ -16,6 +16,14 @@ def export_manifest(asset_lab: Path) -> Path:
     output += json.dumps(data, ensure_ascii=False, indent=2)
     output += ";\n"
     destination.write_text(output, encoding="utf-8")
+    catalog_path = asset_lab / "audio_library" / "catalog.json"
+    catalog = json.loads(catalog_path.read_text(encoding="utf-8")) if catalog_path.exists() else {"version": 1, "candidates": []}
+    audio_destination = asset_lab / "audio_catalog.js"
+    audio_output = "// Generated from audio_library/catalog.json. Do not edit by hand.\n"
+    audio_output += "window.ASSET_LAB_AUDIO_CATALOG = "
+    audio_output += json.dumps(catalog, ensure_ascii=False, indent=2)
+    audio_output += ";\n"
+    audio_destination.write_text(audio_output, encoding="utf-8")
     return destination
 
 

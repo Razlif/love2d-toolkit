@@ -135,6 +135,18 @@ h3 { font-size: 13px; margin: 0; }
 
 .preview-image { image-rendering: pixelated; max-height: 100%; max-width: 100%; object-fit: contain; }
 .preview-caption { color: var(--muted); font-size: 12px; margin: 10px 2px 0; overflow-wrap: anywhere; }
+.audio-library { border-top: 1px solid var(--line); padding: 18px 22px 28px; }
+.audio-library-list { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.audio-group { border-top: 1px solid var(--line); padding-top: 10px; }
+.audio-group summary { cursor: pointer; list-style-position: inside; margin-bottom: 10px; }
+.audio-candidate-list { display: grid; gap: 8px; }
+.audio-candidate { background: var(--panel-raised); border: 1px solid var(--line); border-radius: 4px; display: grid; gap: 7px; padding: 10px; }
+.audio-candidate-heading, .audio-candidate-footer { align-items: center; display: flex; gap: 8px; justify-content: space-between; }
+.audio-candidate-heading strong { overflow-wrap: anywhere; }
+.audio-candidate audio { max-width: 100%; width: 100%; }
+.license-badge { border: 1px solid var(--warning); border-radius: 999px; color: var(--warning); font-size: 10px; padding: 2px 6px; white-space: nowrap; }
+.license-badge.is-cc0 { border-color: var(--accent); color: var(--accent); }
+.source-link { color: var(--accent); font-size: 11px; }
 .empty-state { align-items: center; color: var(--muted); display: flex; flex-direction: column; justify-content: center; min-height: 100%; text-align: center; }
 .empty-icon { color: var(--accent); font-size: 28px; line-height: 1; }
 .inspector-empty { min-height: 200px; }

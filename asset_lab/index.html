@@ -15,6 +15,7 @@
       </div>
       <div class="topbar-actions">
         <span id="manifest-status" class="status-text">Loading manifest...</span>
+        <button id="audio-button" class="small-button" type="button">Audio Library</button>
         <button id="reload-button" class="small-button" type="button">Refresh</button>
       </div>
     </header>
@@ -56,9 +57,21 @@
         <div id="inspector-content" class="inspector-content" hidden></div>
       </aside>
     </main>
+
+    <section class="audio-library panel" aria-label="Audio library">
+      <div class="panel-heading">
+        <div>
+          <p class="section-label">AUDIO LIBRARY</p>
+          <h2>Sound and music candidates</h2>
+        </div>
+        <span id="audio-count" class="count-badge">0</span>
+      </div>
+      <div id="audio-library-list" class="audio-library-list"></div>
+    </section>
   </div>
 
   <script src="manifest.js"></script>
+  <script src="audio_catalog.js"></script>
   <script src="lab.js"></script>
 </body>
 </html>

@@ -111,5 +111,56 @@
       "updated_at": "2026-07-25T21:14:21"
     }
   },
-  "updated_at": "2026-07-25T21:14:21"
+  "updated_at": "2026-07-26T00:14:49",
+  "audio": {
+    "sounds": {
+      "magic_bomb_spell": {
+        "id": "magic_bomb_spell",
+        "path": "media_assets/audio/sounds/magic_bomb_spell.ogg",
+        "source": "opengameart",
+        "source_id": "magic-spell-sfx",
+        "title": "Magic Spell 3",
+        "author": "JaggedStone",
+        "license": "CC0",
+        "source_url": "https://opengameart.org/content/magic-spell-sfx",
+        "preview_url": "https://opengameart.org/sites/default/files/magical_3.ogg",
+        "volume": 1,
+        "loop": false,
+        "sha256": "9fac648a1de869cf9ca2f4b3f1cd47f1766a3ee9d2fdec45831234401d7b2392",
+        "updated_at": "2026-07-26T00:14:49"
+      }
+    },
+    "music": {
+      "intro_music": {
+        "id": "intro_music",
+        "path": "media_assets/audio/music/intro_music.ogg",
+        "source": "opengameart",
+        "source_id": "sleep-talking-loop-fantasy-rpg-sci-fi",
+        "title": "Sleep Talking Fantasy Loop",
+        "author": "KiluaBoy",
+        "license": "CC0",
+        "source_url": "https://opengameart.org/content/sleep-talking-loop-fantasy-rpg-sci-fi",
+        "preview_url": "https://opengameart.org/sites/default/files/SleepTalking_0.ogg",
+        "volume": 0.8,
+        "loop": true,
+        "sha256": "ec10378fb81ea5269e90dd346b2602af40bdcb2a9f14214a0af144c2c4ab8dac",
+        "updated_at": "2026-07-26T00:14:48"
+      },
+      "game_ambient": {
+        "id": "game_ambient",
+        "path": "media_assets/audio/music/game_ambient.ogg",
+        "source": "opengameart",
+        "source_id": "ambient-relaxing-loop",
+        "title": "Ambient Relaxing Loop",
+        "author": "isaiah658",
+        "license": "CC0",
+        "source_url": "https://opengameart.org/content/ambient-relaxing-loop",
+        "preview_url": "https://opengameart.org/sites/default/files/Ambient-Loop-isaiah658_0.ogg",
+        "volume": 0.65,
+        "loop": true,
+        "sha256": "3c328794b77d3f3742a5a8fa36606c3b780d15b0b8f6148b29a78ec6caffcd9e",
+        "updated_at": "2026-07-26T00:14:49"
+      }
+    }
+  }
 }

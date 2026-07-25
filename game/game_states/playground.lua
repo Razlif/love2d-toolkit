@@ -40,6 +40,7 @@ local Playground = {
 function Playground.enter()
   AssetLoader.load_manifest(asset_manifest)
   AudioManager.load_manifest(asset_manifest)
+  AudioManager.play_music("game_ambient", { loop = true, volume = 0.65 })
   Playground.duck = Character.new(duck_definition, AssetLoader.get_character(duck_definition.asset_id))
   Playground.slime = Character.new(slime_definition, AssetLoader.get_character(slime_definition.asset_id))
   Playground.explosion = Effect.new(explosion_definition, AssetLoader.get_effect(explosion_definition.asset_id))
@@ -138,6 +139,7 @@ function Playground.update(dt)
       Playground.bomb:detonate()
       Playground.bomb = nil
       Playground.explosion:trigger()
+      AudioManager.play_sfx("magic_bomb_spell", { volume = 1 })
       Playground.camera:shake(10, 0.18)
       break
     end

@@ -26,6 +26,10 @@ import sync_manifest
 import validate_lab_assets
 import autosprite
 import pixellab
+import audio_manifest
+import audio_search
+import audio_import
+import promote_audio_asset
 
 
 def make_png(path: Path, color: tuple[int, int, int, int] = (255, 0, 0, 255)) -> None:
@@ -295,6 +299,80 @@ class AssetLabCliTests(unittest.TestCase):
             self.assertEqual(asset["images"][0]["prompt_metadata"]["asset_type"], "character")
             self.assertEqual(asset["images"][0]["prompt_metadata"]["action"], "legacy_image")
             self.assertEqual(asset["animations"][0]["prompt_metadata"]["source_prompt_snapshot"], "duck prompt")
+
+
+class AudioAssetTests(unittest.TestCase):
+    def test_license_policy_normalizes_allowed_and_rejects_restricted(self) -> None:
+        self.assertTrue(audio_manifest.license_allowed("Creative Commons 0"))
+        self.assertTrue(audio_manifest.license_allowed("https://creativecommons.org/licenses/by/4.0/"))
+        self.assertFalse(audio_manifest.license_allowed("Attribution NonCommercial"))
+        self.assertFalse(audio_manifest.license_allowed(None))
+
+    def test_curated_candidates_require_allowed_license(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "curated.json"
+            path.write_text(json.dumps({
+                "source": "kenney", "kind": "sound", "title": "Jump", "license": "CC0",
+                "source_url": "https://kenney.nl/assets"
+            }), encoding="utf-8")
+            candidate = audio_search.curated_candidates(path)[0]
+            self.assertEqual(candidate["candidate_id"], "kenney_jump")
+            path.write_text(json.dumps({
+                "source": "oga", "kind": "sound", "title": "Restricted", "license": "CC BY-NC",
+                "source_url": "https://opengameart.org/"
+            }), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "disallowed"):
+                audio_search.curated_candidates(path)
+
+    def test_audio_import_and_promotion_update_runtime_manifest(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            lab = root / "asset_lab"
+            imported = lab / "audio_library" / "imported" / "sound" / "magic_explosion.ogg"
+            imported.parent.mkdir(parents=True)
+            imported.write_bytes(b"mock ogg")
+            catalog = {"version": 1, "candidates": [{
+                "candidate_id": "freesound_123", "kind": "sound", "source": "freesound",
+                "source_id": "123", "title": "Magic Explosion", "author": "Artist",
+                "license": "CC0", "source_url": "https://freesound.org/s/123/",
+                "local_preview": "audio_library/previews/freesound_123.ogg",
+                "imported_path": "audio_library/imported/sound/magic_explosion.ogg",
+                "status": "imported"
+            }]}
+            lab.joinpath("audio_library").mkdir(exist_ok=True)
+            lab.joinpath("audio_library", "catalog.json").write_text(json.dumps(catalog), encoding="utf-8")
+            original = {
+                "audio_lab": audio_manifest.ASSET_LAB_DIR,
+                "catalog": audio_manifest.CATALOG_PATH,
+                "imported": audio_manifest.IMPORTED_DIR,
+                "root": promote_audio_asset.PROJECT_ROOT,
+                "credits": promote_audio_asset.ATTRIBUTIONS_PATH,
+            }
+            try:
+                audio_manifest.ASSET_LAB_DIR = lab
+                audio_manifest.CATALOG_PATH = lab / "audio_library" / "catalog.json"
+                audio_manifest.IMPORTED_DIR = lab / "audio_library" / "imported"
+                promote_audio_asset.PROJECT_ROOT = root
+                promote_audio_asset.ATTRIBUTIONS_PATH = root / "media_assets" / "audio" / "ATTRIBUTIONS.json"
+                self.assertEqual(promote_audio_asset.main([
+                    "--operation", "promote-new", "--kind", "sound", "--asset-id", "magic_explosion",
+                    "--candidate-id", "freesound_123"
+                ]), 0)
+                self.assertFalse((root / "media_assets" / "audio" / "sounds" / "magic_explosion.ogg").exists())
+                self.assertEqual(promote_audio_asset.main([
+                    "--operation", "promote-new", "--kind", "sound", "--asset-id", "magic_explosion",
+                    "--candidate-id", "freesound_123", "--execute"
+                ]), 0)
+                runtime = (root / "game_data" / "asset_manifest.lua").read_text(encoding="utf-8")
+                self.assertIn("magic_explosion", runtime)
+                credits = json.loads((root / "media_assets" / "audio" / "ATTRIBUTIONS.json").read_text(encoding="utf-8"))
+                self.assertEqual(credits["audio"]["magic_explosion"]["license"], "CC0")
+            finally:
+                audio_manifest.ASSET_LAB_DIR = original["audio_lab"]
+                audio_manifest.CATALOG_PATH = original["catalog"]
+                audio_manifest.IMPORTED_DIR = original["imported"]
+                promote_audio_asset.PROJECT_ROOT = original["root"]
+                promote_audio_asset.ATTRIBUTIONS_PATH = original["credits"]
 
 
 class PixelLabProviderTests(unittest.TestCase):

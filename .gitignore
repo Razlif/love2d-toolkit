@@ -20,6 +20,14 @@ asset_lab/lab_assets/*/*
 !asset_lab/lab_assets/effects/magic_explosion/
 !asset_lab/lab_assets/effects/magic_explosion/**
 
+# Downloaded audio previews and staging files are local; promoted audio lives in media_assets.
+asset_lab/audio_library/previews/*
+!asset_lab/audio_library/previews/.gitkeep
+asset_lab/audio_library/imported/*
+!asset_lab/audio_library/imported/.gitkeep
+asset_lab/audio_library/catalog.json
+asset_lab/audio_catalog.js
+
 # Local Graphify context artifacts.
 graphify-out/
 .graphify*

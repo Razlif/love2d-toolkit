@@ -12,7 +12,8 @@ SCENES = ROOT / "cutscene_engine" / "scenes"
 MANIFEST = ROOT / "game_data" / "asset_manifest.lua"
 COMMANDS = {
     "wait", "move", "face", "play_animation", "say", "camera_move",
-    "camera_follow", "camera_shake", "camera_zoom", "play_effect", "fade",
+    "camera_follow", "camera_shake", "camera_zoom", "play_effect", "play_sound",
+    "play_music", "stop_music", "fade",
 }
 
 
@@ -49,6 +50,15 @@ def validate(scene_id: str) -> list[str]:
     for animation_name in re.findall(r'command\s*=\s*"play_animation".*?name\s*=\s*"([^"]+)"', text, re.S):
         if not re.search(rf'name\s*=\s*"{re.escape(animation_name)}"', manifest_text):
             errors.append(f"animation not found in manifest: {animation_name}")
+    for sound_id in re.findall(r'command\s*=\s*"play_sound".*?sound_id\s*=\s*"([^"]+)"', text, re.S):
+        if not re.search(rf"\b{re.escape(sound_id)}\s*=\s*\{{", manifest_text):
+            errors.append(f"sound not found in manifest: {sound_id}")
+    for music_id in re.findall(r'command\s*=\s*"play_music".*?music_id\s*=\s*"([^"]+)"', text, re.S):
+        if not re.search(rf"\b{re.escape(music_id)}\s*=\s*\{{", manifest_text):
+            errors.append(f"music not found in manifest: {music_id}")
+    for raw_value in re.findall(r'(?:volume|pitch)\s*=\s*(-?[0-9]+(?:\.[0-9]+)?)', text):
+        if float(raw_value) < 0:
+            errors.append(f"negative audio value: {raw_value}")
     return errors
 
 

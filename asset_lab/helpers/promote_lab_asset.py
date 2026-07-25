@@ -303,6 +303,11 @@ def runtime_manifest_data(state: dict[str, Any]) -> dict[str, Any]:
             "image": asset.get("image"),
             "animations": asset.get("animations", {}),
         }
+    audio_state = state.get("audio", {})
+    result["audio"] = {
+        "sounds": audio_state.get("sounds", {}),
+        "music": audio_state.get("music", {}),
+    }
     return result
 
 

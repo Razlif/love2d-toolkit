@@ -4,6 +4,7 @@
 
   const state = {
     manifest: window.ASSET_LAB_MANIFEST || { assets: [], orphans: [] },
+    audioCatalog: window.ASSET_LAB_AUDIO_CATALOG || { candidates: [] },
     selectedAssetId: null,
     selectedMediaKey: null
   };
@@ -11,6 +12,7 @@
 
   const elements = {
     status: document.getElementById("manifest-status"),
+    audioButton: document.getElementById("audio-button"),
     reload: document.getElementById("reload-button"),
     count: document.getElementById("asset-count"),
     tree: document.getElementById("asset-tree"),
@@ -20,7 +22,9 @@
     previewStage: document.getElementById("preview-stage"),
     previewCaption: document.getElementById("preview-caption"),
     inspectorEmpty: document.getElementById("inspector-empty"),
-    inspectorContent: document.getElementById("inspector-content")
+    inspectorContent: document.getElementById("inspector-content"),
+    audioCount: document.getElementById("audio-count"),
+    audioList: document.getElementById("audio-library-list")
   };
 
   const groupOrder = [
@@ -276,6 +280,57 @@
     elements.status.classList.toggle("is-error", Boolean(isError));
   }
 
+  function renderAudioLibrary() {
+    const candidates = state.audioCatalog.candidates || [];
+    elements.audioCount.textContent = candidates.length;
+    elements.audioList.replaceChildren();
+    if (!candidates.length) {
+      elements.audioList.append(create("p", "muted", "No audio candidates staged yet."));
+      return;
+    }
+    const groups = new Map([["sound", "Sounds"], ["music", "Music"]]);
+    groups.forEach((label, kind) => {
+      const items = candidates.filter((candidate) => candidate.kind === kind);
+      const section = document.createElement("details");
+      section.className = "audio-group";
+      section.open = true;
+      const summary = create("summary", "asset-section-title", `${label} (${items.length})`);
+      section.append(summary);
+      const list = create("div", "audio-candidate-list");
+      items.forEach((candidate) => {
+        const card = create("article", "audio-candidate");
+        const heading = create("div", "audio-candidate-heading");
+        heading.append(create("strong", null, text(candidate.title)));
+        const license = create("span", `license-badge${candidate.license && candidate.license.toLowerCase().includes("cc0") ? " is-cc0" : ""}`, text(candidate.license));
+        heading.append(license);
+        card.append(heading);
+        card.append(create("code", "audio-candidate-id", text(candidate.candidate_id)));
+        card.append(create("p", "choice-card-meta", `${text(candidate.source)} · ${text(candidate.author)} · ${text(candidate.duration)}s`));
+        if (candidate.local_preview || candidate.preview_url) {
+          const audio = document.createElement("audio");
+          audio.controls = true;
+          audio.preload = "none";
+          audio.src = candidate.local_preview || candidate.preview_url;
+          card.append(audio);
+        } else {
+          card.append(create("p", "warning-line is-danger", "Local preview missing."));
+        }
+        const footer = create("div", "audio-candidate-footer");
+        const link = create("a", "source-link", "Open source");
+        link.href = candidate.source_url || "#";
+        link.target = "_blank";
+        link.rel = "noreferrer";
+        footer.append(link);
+        footer.append(create("span", "muted", candidate.license && candidate.license.toLowerCase().includes("cc0") ? "No attribution required" : "Attribution recorded on import"));
+        card.append(footer);
+        list.append(card);
+      });
+      if (!items.length) list.append(create("p", "muted", "Empty"));
+      section.append(list);
+      elements.audioList.append(section);
+    });
+  }
+
   function start() {
     if (!window.ASSET_LAB_MANIFEST) {
       setStatus("manifest.js missing", true);
@@ -283,7 +338,11 @@
       setStatus(`${state.manifest.assets.length} assets loaded`);
     }
     elements.reload.addEventListener("click", () => window.location.reload());
+    elements.audioButton.addEventListener("click", () => {
+      document.querySelector(".audio-library").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
     renderTree();
+    renderAudioLibrary();
     const initialAssetId = preferredInitialAssetId();
     if (initialAssetId) selectAsset(initialAssetId);
   }

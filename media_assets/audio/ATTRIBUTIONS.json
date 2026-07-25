@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "audio": {
+    "intro_music": {
+      "title": "Sleep Talking Fantasy Loop",
+      "author": "KiluaBoy",
+      "license": "CC0",
+      "source": "opengameart",
+      "source_id": "sleep-talking-loop-fantasy-rpg-sci-fi",
+      "source_url": "https://opengameart.org/content/sleep-talking-loop-fantasy-rpg-sci-fi"
+    },
+    "game_ambient": {
+      "title": "Ambient Relaxing Loop",
+      "author": "isaiah658",
+      "license": "CC0",
+      "source": "opengameart",
+      "source_id": "ambient-relaxing-loop",
+      "source_url": "https://opengameart.org/content/ambient-relaxing-loop"
+    },
+    "magic_bomb_spell": {
+      "title": "Magic Spell 3",
+      "author": "JaggedStone",
+      "license": "CC0",
+      "source": "opengameart",
+      "source_id": "magic-spell-sfx",
+      "source_url": "https://opengameart.org/content/magic-spell-sfx"
+    }
+  }
+}

@@ -1,5 +1,6 @@
 -- Timeline command implementations for the cutscene engine.
 local DialogueBox = require("game.ui.ui_elements.default_dialogue_box")
+local AudioManager = require("game.systems.audio_manager")
 
 local Commands = {}
 
@@ -14,6 +15,9 @@ Commands.names = {
   camera_follow = true,
   camera_shake = true,
   play_effect = true,
+  play_sound = true,
+  play_music = true,
+  stop_music = true,
   fade = true
 }
 
@@ -46,6 +50,15 @@ function Commands.validate(command, index)
     assert(command.amplitude ~= nil and command.duration ~= nil, "camera_shake requires amplitude and duration at index " .. tostring(index))
   elseif name == "play_effect" then
     assert(command.asset_id, "play_effect requires asset_id at index " .. tostring(index))
+  elseif name == "play_sound" then
+    assert(command.sound_id, "play_sound requires sound_id at index " .. tostring(index))
+    assert(command.volume == nil or (command.volume >= 0 and command.volume <= 1), "play_sound volume must be 0..1 at index " .. tostring(index))
+    assert(command.pitch == nil or command.pitch > 0, "play_sound pitch must be positive at index " .. tostring(index))
+  elseif name == "play_music" then
+    assert(command.music_id, "play_music requires music_id at index " .. tostring(index))
+    assert(command.volume == nil or (command.volume >= 0 and command.volume <= 1), "play_music volume must be 0..1 at index " .. tostring(index))
+  elseif name == "stop_music" then
+    assert(command.fade == nil or command.fade >= 0, "stop_music fade must be non-negative at index " .. tostring(index))
   elseif name == "fade" then
     assert(command.alpha ~= nil and command.duration ~= nil, "fade requires alpha and duration at index " .. tostring(index))
   end
@@ -168,6 +181,15 @@ function Commands.begin(player, command)
     return { done = true }
   elseif name == "play_effect" then
     player:spawn_effect(command)
+    return { done = true }
+  elseif name == "play_sound" then
+    AudioManager.play_sfx(command.sound_id, { volume = command.volume, pitch = command.pitch })
+    return { done = true }
+  elseif name == "play_music" then
+    AudioManager.play_music(command.music_id, { loop = command.loop, volume = command.volume })
+    return { done = true }
+  elseif name == "stop_music" then
+    AudioManager.stop_music(command.fade)
     return { done = true }
   elseif name == "fade" then
     return {
