@@ -19,27 +19,6 @@ The duck, slime, background, bomb, music, and cutscene are examples.
 - `lovec` for command-line previews and QA, if available
 - Provider API keys only when using external asset or audio services
 
-## Providers And `.env`
-
-`.env` is used by the Python Asset Lab helpers, not by the Love2D game.
-
-Create it from the template:
-
-```cmd
-copy .env.example .env
-```
-
-Add only the keys for the providers you use:
-
-```text
-PIXELLAB_API_KEY=...
-AUTOSPRITE_API_KEY=...
-FREESOUND_API_KEY=...
-```
-
-The `self` and `mock` providers do not need API keys. `.env` is ignored by
-Git; never commit real keys.
-
 ## Boot
 
 ```cmd
@@ -90,6 +69,34 @@ Asset Lab displays:
 - GIF animation previews.
 - The last-created asset after refresh.
 - Audio candidates with preview, source, license, and attribution data.
+
+### Providers And `.env`
+
+Asset Lab supports:
+
+- `self`: the agent creates files and saves them at the requested paths.
+- `mock`: local testing without an external service.
+- `pixellab`: generated images and animations through PixelLab.
+- `autosprite`: AutoSprite provider workflow.
+- Audio search: open-source and curated sound sources such as Freesound and
+  OpenGameArt.
+
+Create the environment file from the template:
+
+```cmd
+copy .env.example .env
+```
+
+Add only the keys for the providers you use:
+
+```text
+PIXELLAB_API_KEY=...
+AUTOSPRITE_API_KEY=...
+FREESOUND_API_KEY=...
+```
+
+The `self` and `mock` providers do not need API keys. `.env` is ignored by
+Git.
 
 Ask:
 
