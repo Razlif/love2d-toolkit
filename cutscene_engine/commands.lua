@@ -24,6 +24,10 @@ function Commands.validate(command, index)
   if name == "say" then
     assert(command.actor or command.speaker, "say requires actor or speaker at index " .. tostring(index))
     assert(type(command.text) == "string", "say requires text at index " .. tostring(index))
+    assert(not command.style or command.style == "footer" or command.style == "card", "say style must be footer or card at index " .. tostring(index))
+    if command.style == "card" then
+      assert(command.actor, "card dialogue requires actor at index " .. tostring(index))
+    end
   elseif name == "face" or name == "play_animation" then
     assert(command.actor, name .. " requires actor at index " .. tostring(index))
   elseif name == "move" then
@@ -92,11 +96,13 @@ function Commands.begin(player, command)
     end
     local target_y = command.ground_y or actor.position.ground_y
     local uses_game_movement = command.movement == "game"
-    local uses_game_hop = command.movement == "game_hop"
-      or (command.animation and command.animation == actor.hop_animation)
-    local default_duration = uses_game_hop
-      and actor:get_animation_duration(command.animation)
-      or move_duration(actor, actor.position.x, actor.position.ground_y, target_x, target_y)
+    local speed_actor = {
+      movement = {
+        speed = command.speed or command.speed_x or movement_speed(actor, "x"),
+        vertical_speed = command.speed or command.speed_y or movement_speed(actor, "y")
+      }
+    }
+    local default_duration = move_duration(speed_actor, actor.position.x, actor.position.ground_y, target_x, target_y)
     return {
       actor = actor,
       start_x = actor.position.x,
@@ -105,8 +111,6 @@ function Commands.begin(player, command)
       target_y = target_y,
       duration = duration_for(command, default_duration > 0 and default_duration or 1),
       elapsed = 0,
-      uses_game_movement = uses_game_movement or uses_game_hop,
-      uses_game_hop = uses_game_hop,
       speed_x = command.speed or command.speed_x or movement_speed(actor, "x"),
       speed_y = command.speed or command.speed_y or movement_speed(actor, "y")
     }
@@ -123,6 +127,8 @@ function Commands.begin(player, command)
     player.dialogue = DialogueBox.new({
       speaker = command.speaker or (actor and actor.id) or "",
       text = command.text or "",
+      actor = actor,
+      style = command.style or "footer",
       reveal_speed = command.reveal_speed or 30
     })
     return {
@@ -141,6 +147,7 @@ function Commands.begin(player, command)
       elapsed = 0
     }
   elseif name == "camera_zoom" then
+    player.camera.target = nil
     local center_x, center_y = player.camera:get_center()
     return {
       start_zoom = player.camera.zoom,
@@ -154,7 +161,7 @@ function Commands.begin(player, command)
       elapsed = 0
     }
   elseif name == "camera_follow" then
-    player.camera:follow(actor_for(player, command).position)
+    player.camera:follow(actor_for(player, command))
     return { done = true }
   elseif name == "camera_shake" then
     player.camera:shake(command.amplitude or 0, command.duration or 0.1)
@@ -183,7 +190,7 @@ function Commands.update(player, command, active, dt)
   local eased = smoothstep(progress)
 
   if command.command == "move" then
-    if active.uses_game_movement and not active.uses_game_hop then
+    if active.uses_game_movement then
       local step_x = active.speed_x * dt
       local step_y = active.speed_y * dt
       if active.target_x < active.actor.position.x then step_x = -step_x end
@@ -204,7 +211,7 @@ function Commands.update(player, command, active, dt)
   elseif command.command == "camera_zoom" then
     player.camera:set_zoom(active.start_zoom + (active.target_zoom - active.start_zoom) * eased)
     if active.focus_actor then
-      local focus = active.focus_actor:get_camera_focus()
+      local focus = active.focus_actor:get_camera_focus(player.camera.zoom, true)
       player.camera:set_center(focus.x, focus.ground_y)
     elseif active.focus_x then
       player.camera:set_center(active.focus_x, active.focus_ground_y or 0)

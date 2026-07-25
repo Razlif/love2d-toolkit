@@ -11,6 +11,11 @@ VALIDATOR = ROOT / "cutscene_engine" / "tools" / "validate_scene.py"
 
 
 class CutsceneEngineTests(unittest.TestCase):
+    def test_start_state_is_registered(self) -> None:
+        source = (ROOT / "game" / "states_manager.lua").read_text(encoding="utf-8")
+        self.assertIn('start = require("game.game_states.start")', source)
+        self.assertIn('StatesManager.change("start", ...)', source)
+
     def test_example_scene_validates(self) -> None:
         result = subprocess.run(
             [PYTHON, str(VALIDATOR), "duck_slime_intro"],

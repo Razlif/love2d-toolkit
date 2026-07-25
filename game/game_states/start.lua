@@ -1,0 +1,95 @@
+-- Start screen for the template's disposable example game.
+local asset_manifest = require("game_data.asset_manifest")
+local AssetLoader = require("game.systems.asset_loader")
+local AudioManager = require("game.systems.audio_manager")
+local CameraManager = require("game.systems.camera_manager")
+local InputManager = require("game.systems.input_manager")
+local Menu = require("game.ui.ui_elements.default_menu")
+local ParallaxManager = require("game.systems.parallax")
+local Theme = require("game.ui.theme")
+
+local Start = {
+  camera = nil,
+  parallax = nil,
+  menu = nil
+}
+
+local function states_manager()
+  return require("game.states_manager")
+end
+
+local function menu_layout()
+  local width = math.min(300, love.graphics.getWidth() - 40)
+  return {
+    x = (love.graphics.getWidth() - width) / 2,
+    y = love.graphics.getHeight() * 0.58,
+    width = width,
+    spacing = 56
+  }
+end
+
+function Start.enter()
+  AssetLoader.load_manifest(asset_manifest)
+  AudioManager.load_manifest(asset_manifest)
+  Start.camera = CameraManager.new({
+    width = 960,
+    height = 540,
+    bounds = { left = 0, top = 0, right = 1672, bottom = 941 },
+    smoothing = 8
+  })
+  Start.camera:set_center(836, 470)
+  Start.parallax = ParallaxManager.new({
+    {
+      id = "start_background",
+      image_path = asset_manifest.backgrounds.enchanted_wizard_training_meadow.image.path,
+      speed_x = 1,
+      speed_y = 1,
+      repeat_x = false,
+      repeat_y = false
+    }
+  })
+  Start.parallax:set_camera(Start.camera)
+  local layout = menu_layout()
+  Start.menu = Menu.new({
+    { label = "Start", on_confirm = function()
+      states_manager().change("cutscene", "duck_slime_date")
+    end },
+    { label = "Playground", on_confirm = function()
+      states_manager().change("playground")
+    end }
+  }, layout)
+end
+
+function Start.update(dt)
+  if InputManager.consume_pressed("ui_back") then
+    love.event.quit()
+    return
+  end
+  Start.camera:update(dt)
+  Start.parallax:update(dt)
+  Start.menu:update(InputManager)
+end
+
+function Start.draw()
+  love.graphics.clear(0.08, 0.1, 0.14, 1)
+  love.graphics.setColor(1, 1, 1, 1)
+  Start.camera:attach()
+  Start.parallax:draw()
+  Start.camera:detach()
+
+  local theme = Theme.get()
+  local width = love.graphics.getWidth()
+  local height = love.graphics.getHeight()
+  love.graphics.setColor(0, 0, 0, 0.32)
+  love.graphics.rectangle("fill", 0, 0, width, height)
+  love.graphics.setColor(theme.colors.text)
+  love.graphics.printf("The Adventures of Slime and Duck", 24, height * 0.22, width - 48, "center")
+  Start.menu:draw()
+  love.graphics.setColor(1, 1, 1, 1)
+end
+
+function Start.get_debug_context()
+  return { entities = {}, camera = Start.camera, collision_events = {} }
+end
+
+return Start

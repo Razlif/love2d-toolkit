@@ -9,11 +9,20 @@ local function clamp(value, minimum, maximum)
   return math.max(minimum, math.min(maximum, value))
 end
 
+local function clamp_to_bounds(camera)
+  if not camera.bounds then
+    return
+  end
+  camera.x = clamp(camera.x, camera.bounds.left, camera.bounds.right - camera.width / camera.zoom)
+  camera.y = clamp(camera.y, camera.bounds.top, camera.bounds.bottom - camera.height / camera.zoom)
+end
+
 function CameraManager.new(config)
   config = config or {}
   local camera = setmetatable({
     width = config.width or 960,
     height = config.height or 540,
+    responsive = config.responsive ~= false,
     x = 0,
     y = 0,
     zoom = config.zoom or 1,
@@ -30,6 +39,21 @@ function CameraManager.new(config)
   return camera
 end
 
+function CameraManager:refresh_viewport()
+  if not self.responsive or not love.graphics or not love.graphics.getWidth then
+    return
+  end
+  local width = love.graphics.getWidth()
+  local height = love.graphics.getHeight()
+  if width == self.width and height == self.height then
+    return
+  end
+  local center_x, center_y = self:get_center()
+  self.width = width
+  self.height = height
+  self:set_center(center_x, center_y)
+end
+
 function CameraManager:follow(position)
   self.target = position
 end
@@ -39,18 +63,20 @@ function CameraManager:set_bounds(bounds)
 end
 
 function CameraManager:update(dt)
+  self:refresh_viewport()
   if self.target then
-    local desired_x = self.target.x - self.width / (2 * self.zoom)
-    local desired_y = self.target.ground_y - self.height / (2 * self.zoom)
+    local target = self.target
+    if target.get_camera_focus then
+      target = target:get_camera_focus()
+    end
+    local desired_x = target.x - self.width / (2 * self.zoom)
+    local desired_y = target.ground_y - self.height / (2 * self.zoom)
     local amount = math.min(1, dt * self.smoothing)
     self.x = self.x + (desired_x - self.x) * amount
     self.y = self.y + (desired_y - self.y) * amount
   end
 
-  if self.bounds then
-    self.x = clamp(self.x, self.bounds.left, self.bounds.right - self.width / self.zoom)
-    self.y = clamp(self.y, self.bounds.top, self.bounds.bottom - self.height / self.zoom)
-  end
+  clamp_to_bounds(self)
 
   if self.shake_remaining > 0 then
     self.shake_remaining = math.max(0, self.shake_remaining - dt)
@@ -65,13 +91,17 @@ function CameraManager:update(dt)
 end
 
 function CameraManager:set_zoom(zoom)
+  self:refresh_viewport()
   assert(zoom and zoom > 0, "Camera zoom must be positive")
   self.zoom = zoom
+  clamp_to_bounds(self)
 end
 
 function CameraManager:set_center(x, ground_y)
+  self:refresh_viewport()
   self.x = x - self.width / (2 * self.zoom)
   self.y = ground_y - self.height / (2 * self.zoom)
+  clamp_to_bounds(self)
 end
 
 function CameraManager:get_center()
@@ -88,6 +118,7 @@ function CameraManager:shake(amplitude, duration)
 end
 
 function CameraManager:attach()
+  self:refresh_viewport()
   local center_x, center_y = self:get_center()
   love.graphics.push()
   love.graphics.translate(self.width / 2 + self.shake_x, self.height / 2 + self.shake_y)

@@ -93,7 +93,7 @@ local function run()
   local auto_events = CollisionDetection.check({ first, second })
   assert_equal(auto_events[2].sensor_id, "auto_body", "automatic sensor")
 
-  local camera = CameraManager.new({ width = 100, height = 50, bounds = { left = 0, top = 0, right = 500, bottom = 300 }, smoothing = 20 })
+  local camera = CameraManager.new({ width = 100, height = 50, responsive = false, bounds = { left = 0, top = 0, right = 500, bottom = 300 }, smoothing = 20 })
   local target = { x = 250, ground_y = 150 }
   camera:follow(target)
   camera:update(1)
@@ -109,6 +109,15 @@ local function run()
   local centered_x, centered_y = camera:world_to_screen(250, 150)
   assert_equal(centered_x, 50, "zoomed camera horizontal center")
   assert_equal(centered_y, 25, "zoomed camera vertical center")
+  camera:set_zoom(1)
+  camera:follow({
+    get_camera_focus = function()
+      return { x = 250, ground_y = 100 }
+    end
+  })
+  camera:update(1)
+  assert_equal(camera.x, 200, "camera follows visual focus x")
+  assert_equal(camera.y, 75, "camera follows visual focus y")
   ParallaxManager.new({}):set_camera(camera)
 
   AudioManager.load_manifest({})

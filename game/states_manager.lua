@@ -7,6 +7,7 @@ local StatesManager = {
 }
 
 local states = {
+  start = require("game.game_states.start"),
   playground = require("game.game_states.playground"),
   cutscene = require("game.game_states.cutscene")
 }
@@ -32,7 +33,7 @@ function StatesManager.load(options, ...)
   if options and options.cutscene_id then
     StatesManager.change("cutscene", options.cutscene_id, ...)
   else
-    StatesManager.change("playground", ...)
+    StatesManager.change("start", ...)
   end
 end
 

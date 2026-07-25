@@ -33,7 +33,8 @@ local Playground = {
   camera = nil,
   parallax = nil,
   last_collision_events = {},
-  collision_debug = true
+  collision_debug = true,
+  startup_hint_elapsed = 0
 }
 
 function Playground.enter()
@@ -43,6 +44,7 @@ function Playground.enter()
   Playground.slime = Character.new(slime_definition, AssetLoader.get_character(slime_definition.asset_id))
   Playground.explosion = Effect.new(explosion_definition, AssetLoader.get_effect(explosion_definition.asset_id))
   Playground.timer = TimerManager.new()
+  Playground.startup_hint_elapsed = 0
   Playground.slime_health = slime_definition.health or 3
   for _, character in ipairs({ Playground.duck, Playground.slime }) do
     local image_width = character.asset.image.width
@@ -82,6 +84,7 @@ end
 
 function Playground.update(dt)
   Playground.timer:update(dt)
+  Playground.startup_hint_elapsed = Playground.startup_hint_elapsed + dt
   if InputManager.consume_pressed("ui_back") then
     states_manager().push_overlay("pause")
     return
@@ -168,6 +171,12 @@ function Playground.draw()
   love.graphics.print("Asset Lab -> Love2D playground", 24, 24)
   love.graphics.print("Arrows/WASD: move   Space: hop   E: plant bomb", 24, 48)
   love.graphics.print(string.format("Slime health: %d   Bomb: %s", Playground.slime_health, Playground.timer:is_active("bomb_cooldown") and "cooldown" or "ready"), 24, 72)
+  if Playground.startup_hint_elapsed < 6 then
+    local flicker = 0.55 + 0.45 * math.abs(math.sin(Playground.startup_hint_elapsed * 8))
+    love.graphics.setColor(1, 0.82, 0.18, flicker)
+    love.graphics.printf("RUN FROM SLIME! USE E TO DROP BOMB", 24, 112, love.graphics.getWidth() - 48, "center")
+    love.graphics.setColor(1, 1, 1, 1)
+  end
 end
 
 return Playground

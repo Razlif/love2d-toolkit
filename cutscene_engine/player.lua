@@ -39,6 +39,8 @@ function Player.new(scene, options)
     local gameplay_definition = require("game_data.characters." .. data.asset_id)
     data.movement = data.movement or gameplay_definition.movement
     data.hop_animation = data.hop_animation or gameplay_definition.hop_animation
+    data.default_animation = data.default_animation or gameplay_definition.default_animation
+    data.default_animation_loop = data.default_animation_loop or gameplay_definition.default_animation_loop
     local asset = AssetLoader.get_character(data.asset_id)
     player.actors[id] = AssetActor.new(data, asset)
   end
@@ -122,6 +124,7 @@ function Player:update(dt)
     local command = self.scene.timeline[self.timeline_index - 1]
     if Commands.update(self, command, self.active_command, dt) then
       if command.command == "say" then self.dialogue = nil end
+      if command.command == "move" then self.actors[command.actor]:idle() end
       self.active_command = nil
     end
   end
@@ -131,6 +134,7 @@ end
 
 function Player:draw()
   love.graphics.clear(0.08, 0.1, 0.14, 1)
+  love.graphics.setColor(1, 1, 1, 1)
   self.camera:attach()
   self.parallax:draw()
   local drawables = {}
@@ -138,11 +142,12 @@ function Player:draw()
   for _, effect in ipairs(self.effects) do drawables[#drawables + 1] = effect end
   for _, drawable in ipairs(DrawOrder.sort(drawables)) do drawable:draw() end
   self.camera:detach()
-  if self.dialogue then self.dialogue:draw() end
+  if self.dialogue then self.dialogue:draw(self.camera) end
   if self.fade.alpha > 0 then
     love.graphics.setColor(self.fade.color[1], self.fade.color[2], self.fade.color[3], self.fade.alpha)
     love.graphics.rectangle("fill", 0, 0, self.camera.width, self.camera.height)
   end
+  love.graphics.setColor(1, 1, 1, 1)
 end
 
 function Player:skip()

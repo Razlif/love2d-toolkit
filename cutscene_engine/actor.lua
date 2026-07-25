@@ -20,6 +20,8 @@ function Actor.new(data, loaded_asset)
     source_facing = data.source_facing or 1,
     movement = data.movement or {},
     hop_animation = data.hop_animation,
+    default_animation = data.default_animation,
+    default_animation_loop = data.default_animation_loop == true,
     draw_layer = data.draw_layer or 20,
     draw_order_id = data.id,
     animation = AnimationManager.new(loaded_asset.animations)
@@ -53,10 +55,25 @@ function Actor:update(dt)
   self.animation:update(dt)
 end
 
-function Actor:get_camera_focus()
+function Actor:idle()
+  if self.default_animation then
+    self.animation:play(self.default_animation)
+    local animation = self.animation.animations[self.default_animation]
+    animation.loop = self.default_animation_loop
+  else
+    self.animation:stop()
+  end
+end
+
+function Actor:get_camera_focus(zoom, include_dialogue)
+  local top = self.position.ground_y - self.anchor_y * self.scale
+  if include_dialogue then
+    local camera_zoom = zoom or 1
+    top = top - (92 + 18) / camera_zoom
+  end
   return {
     x = self.position.x,
-    ground_y = self.position.ground_y - (self.anchor_y * self.scale) / 2
+    ground_y = (top + self.position.ground_y) / 2
   }
 end
 

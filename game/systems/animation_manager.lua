@@ -35,6 +35,13 @@ function AnimationManager:play(name)
   self.playing = true
 end
 
+function AnimationManager:stop()
+  self.playing = false
+  self.current_name = nil
+  self.current_frame = 1
+  self.elapsed = 0
+end
+
 function AnimationManager:is_playing()
   return self.playing
 end
