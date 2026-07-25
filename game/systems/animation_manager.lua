@@ -39,6 +39,15 @@ function AnimationManager:is_playing()
   return self.playing
 end
 
+function AnimationManager:get_current_frame()
+  return self.current_frame
+end
+
+function AnimationManager:get_current_mask()
+  local animation = self.animations[self.current_name]
+  return animation and animation.mask_frames and animation.mask_frames[self.current_frame]
+end
+
 function AnimationManager:update(dt)
   if not self.playing then
     return
@@ -62,13 +71,13 @@ function AnimationManager:update(dt)
   end
 end
 
-function AnimationManager:draw(x, y, scale, anchor_x, anchor_y)
+function AnimationManager:draw(x, y, scale_x, scale_y, anchor_x, anchor_y)
   if not self.playing then
     return
   end
   local animation = self.animations[self.current_name]
   local quad = animation.quads[self.current_frame]
-  love.graphics.draw(animation.texture, quad, x, y, 0, scale, scale, anchor_x, anchor_y)
+  love.graphics.draw(animation.texture, quad, x, y, 0, scale_x, scale_y, anchor_x, anchor_y)
 end
 
 return AnimationManager

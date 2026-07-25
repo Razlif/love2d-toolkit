@@ -19,4 +19,16 @@ function Main.keypressed(key, scancode, isrepeat)
   game_loop.keypressed(key, scancode, isrepeat)
 end
 
+function Main.keyreleased(key, scancode)
+  game_loop.keyreleased(key, scancode)
+end
+
+function Main.mousepressed(x, y, button)
+  game_loop.mousepressed(x, y, button)
+end
+
+function Main.mousereleased(x, y, button)
+  game_loop.mousereleased(x, y, button)
+end
+
 return Main

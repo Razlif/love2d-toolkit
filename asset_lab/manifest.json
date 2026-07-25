@@ -171,8 +171,36 @@
       ],
       "created_at": "2026-07-25T15:20:48",
       "updated_at": "2026-07-25T15:24:38"
+    },
+    {
+      "id": "enchanted_wizard_training_meadow",
+      "type": "background",
+      "folder": "lab_assets/backgrounds/enchanted_wizard_training_meadow",
+      "images": [
+        {
+          "id": "enchanted_wizard_training_meadow__self__image__v001",
+          "provider": "self",
+          "version": 1,
+          "mode": "brand_new",
+          "path": "lab_assets/backgrounds/enchanted_wizard_training_meadow/original_images/enchanted_wizard_training_meadow__self__image__v001.png",
+          "prompt": "960x540 tileable old-school pixel art fantasy RPG background for an enchanted wizard training meadow: bright blue magical sky in the upper third, distant purple mountains and small trees at the horizon, wide open grassy ground and a winding dirt path in the lower half, subtle glowing crystals and flowers, clear readable 2.5D ground plane, no characters, no text, no UI",
+          "variation_group_id": "enchanted_wizard_training_meadow_self_create_new_20260725_211017_369720",
+          "prompt_metadata": {
+            "prompt": "960x540 tileable old-school pixel art fantasy RPG background for an enchanted wizard training meadow: bright blue magical sky in the upper third, distant purple mountains and small trees at the horizon, wide open grassy ground and a winding dirt path in the lower half, subtle glowing crystals and flowers, clear readable 2.5D ground plane, no characters, no text, no UI",
+            "asset_id": "enchanted_wizard_training_meadow",
+            "asset_type": "background",
+            "provider": "self",
+            "action": "create-new",
+            "variation_group_id": "enchanted_wizard_training_meadow_self_create_new_20260725_211017_369720"
+          },
+          "status": "pending_self_creation"
+        }
+      ],
+      "animations": [],
+      "created_at": "2026-07-25T21:10:17",
+      "updated_at": "2026-07-25T21:10:17"
     }
   ],
-  "updated_at": "2026-07-25T15:34:16",
+  "updated_at": "2026-07-25T21:10:17",
   "orphans": []
 }

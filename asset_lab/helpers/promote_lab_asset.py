@@ -401,11 +401,11 @@ def create_character_scaffold(project_root: Path, plan: dict[str, Any]) -> None:
         "-- Gameplay configuration scaffold generated during promotion.\n"
         "return {\n"
         f"  asset_id = {json.dumps(plan['asset_id'])},\n"
-        "  position = { x = 0, y = 0 },\n"
+        "  position = { x = 0, ground_y = 0, z = 0 },\n"
         "  scale = 1,\n"
         f"  anchor = {{ x = {width // 2}, y = {height} }},\n"
         "  default_animation = nil,\n"
-        "  collision = { enabled = false }\n"
+        "  collision = { enabled = false, auto_sensor = true, sensors = {} }\n"
         "}\n",
         encoding="utf-8",
     )

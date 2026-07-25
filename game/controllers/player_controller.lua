@@ -1,31 +1,34 @@
 -- Converts keyboard state into player movement intent.
+local InputManager = require("game.systems.input_manager")
 local PlayerController = {}
 PlayerController.__index = PlayerController
 
 function PlayerController.new()
-  return setmetatable({ jump_requested = false }, PlayerController)
-end
-
-function PlayerController:keypressed(key)
-  if key == "space" then
-    self.jump_requested = true
-  end
+  return setmetatable({}, PlayerController)
 end
 
 function PlayerController:get_intent()
   local horizontal = 0
-  if love.keyboard.isDown("left") or love.keyboard.isDown("a") then
+  if InputManager.is_down("move_left") then
     horizontal = horizontal - 1
   end
-  if love.keyboard.isDown("right") or love.keyboard.isDown("d") then
+  if InputManager.is_down("move_right") then
     horizontal = horizontal + 1
+  end
+
+  local vertical = 0
+  if InputManager.is_down("move_up") then
+    vertical = vertical - 1
+  end
+  if InputManager.is_down("move_down") then
+    vertical = vertical + 1
   end
 
   local intent = {
     horizontal = horizontal,
-    jump = self.jump_requested
+    vertical = vertical,
+    jump = InputManager.consume_pressed("jump")
   }
-  self.jump_requested = false
   return intent
 end
 
