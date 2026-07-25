@@ -25,6 +25,8 @@ making games with the finished template.
 
 ## Love2D Rules
 
+- The repository root is the Love2D source root; root `main.lua` and `conf.lua`
+  forward into the `game/` code folder.
 - Use Love2D callbacks only as entry points: `love.load`, `love.update`,
   `love.draw`, and input callbacks.
 - Keep `main.lua` small.
@@ -91,6 +93,22 @@ Creator commands:
   access before paid/provider-side work.
 - `prepare-provider-character --provider autosprite`: upload a manifest image
   version and store the returned provider character id in manifest state.
+
+Promotion commands:
+
+- `python asset_lab/helpers/promote_lab_asset.py --operation promote-new
+  --type character --asset-id NAME --image-version N --animation NAME=N`: add
+  an approved Asset Lab asset to the runtime game asset set.
+- Use `--operation promote-update` for an already promoted asset. It replaces
+  the selected runtime image or animation slot and leaves unrelated slots
+  unchanged.
+- Use `--dry-run` to inspect the promotion plan. Normal promotion executes
+  directly; no separate user approval step is required.
+- Promotion copies PNG images and sprite sheets into `media_assets/`, updates
+  `game_data/promoted_assets.json` and generated `game_data/asset_manifest.lua`,
+  and does not copy GIF previews.
+- Never provide arbitrary source or destination paths. Resolve exact versions
+  from `asset_lab/manifest.json`.
 
 After execution:
 

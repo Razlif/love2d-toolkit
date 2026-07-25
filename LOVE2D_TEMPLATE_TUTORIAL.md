@@ -19,9 +19,10 @@ the game systems.
 
 ## 2. Main Entry Files
 
-`game/main.lua`
+`main.lua`
 
-The first file Love2D runs. It wires the app together.
+The first file Love2D runs. It forwards callbacks into `game/main.lua`, keeping
+the repository root available to both `game/` code and `media_assets/`.
 
 Expected job:
 
@@ -30,9 +31,10 @@ Expected job:
 - Start the first state.
 - Forward Love2D callbacks.
 
-`game/conf.lua`
+`conf.lua`
 
-Love2D config file.
+The root Love2D config entry point. It forwards configuration to
+`game/conf.lua`.
 
 Expected job:
 
@@ -40,9 +42,9 @@ Expected job:
 - Set the window size.
 - Configure Love2D version/settings.
 
-`game/game_loop.lua`
+`game/main.lua` and `game/game_loop.lua`
 
-Optional helper for shared update/draw flow.
+Runtime callback facade and shared update/draw flow.
 
 Expected job:
 

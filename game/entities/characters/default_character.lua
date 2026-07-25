@@ -1,1 +1,0 @@
--- Defines the shared starting structure and behavior for game characters.

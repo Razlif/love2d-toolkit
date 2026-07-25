@@ -1,0 +1,99 @@
+{
+  "version": 1,
+  "assets": {
+    "barbarian_duck_wizard": {
+      "id": "barbarian_duck_wizard",
+      "type": "character",
+      "image": {
+        "path": "media_assets/characters/barbarian_duck_wizard/original_images/barbarian_duck_wizard__pixellab__image__v001.png",
+        "source_path": "lab_assets/characters/barbarian_duck_wizard/original_images/barbarian_duck_wizard__pixellab__image__v001.png",
+        "version": 1,
+        "width": 64,
+        "height": 64,
+        "provider": "pixellab",
+        "prompt": "barbarian duck wizard, pixel art, transparent background"
+      },
+      "animations": {
+        "jump": {
+          "name": "jump",
+          "sheet_path": "media_assets/characters/barbarian_duck_wizard/sprite_sheets/barbarian_duck_wizard__pixellab__jump_from_image_v001__v001.png",
+          "source_sheet_path": "lab_assets/characters/barbarian_duck_wizard/sprite_sheets/barbarian_duck_wizard__pixellab__jump_from_image_v001__v001.png",
+          "version": 1,
+          "frame_width": 64,
+          "frame_height": 64,
+          "frame_count": 5,
+          "fps": 8,
+          "loop": false,
+          "provider": "pixellab",
+          "prompt": "jump",
+          "source_image_version": 1
+        }
+      },
+      "created_at": "2026-07-25T16:16:00",
+      "updated_at": "2026-07-25T16:34:11"
+    },
+    "funky_blue_slime": {
+      "id": "funky_blue_slime",
+      "type": "character",
+      "animations": {
+        "idle_bounce": {
+          "name": "idle_bounce",
+          "sheet_path": "media_assets/characters/funky_blue_slime/sprite_sheets/funky_blue_slime__pixellab__idle_bounce_from_image_v001__v001.png",
+          "source_sheet_path": "lab_assets/characters/funky_blue_slime/sprite_sheets/funky_blue_slime__pixellab__idle_bounce_from_image_v001__v001.png",
+          "version": 1,
+          "frame_width": 64,
+          "frame_height": 64,
+          "frame_count": 5,
+          "fps": 8,
+          "loop": false,
+          "provider": "pixellab",
+          "prompt": "idle bounce",
+          "source_image_version": 1
+        }
+      },
+      "image": {
+        "path": "media_assets/characters/funky_blue_slime/original_images/funky_blue_slime__pixellab__image__v001.png",
+        "source_path": "lab_assets/characters/funky_blue_slime/original_images/funky_blue_slime__pixellab__image__v001.png",
+        "version": 1,
+        "width": 64,
+        "height": 64,
+        "provider": "pixellab",
+        "prompt": "tiny blue slime, pixel art, transparent background"
+      },
+      "created_at": "2026-07-25T16:35:36",
+      "updated_at": "2026-07-25T16:35:36"
+    },
+    "magic_explosion": {
+      "id": "magic_explosion",
+      "type": "effect",
+      "animations": {
+        "burst": {
+          "name": "burst",
+          "sheet_path": "media_assets/effects/magic_explosion/sprite_sheets/magic_explosion__self__burst_from_image_v001__v001.png",
+          "source_sheet_path": "lab_assets/effects/magic_explosion/sprite_sheets/magic_explosion__self__burst_from_image_v001__v001.png",
+          "version": 1,
+          "frame_width": 64,
+          "frame_height": 64,
+          "frame_count": 4,
+          "fps": 8,
+          "loop": false,
+          "provider": "self",
+          "prompt": "4-frame transparent pixel art sprite sheet of the magic explosion bursting outward then fading",
+          "source_image_version": 1
+        }
+      },
+      "image": {
+        "path": "media_assets/effects/magic_explosion/original_images/magic_explosion__self__image__v001.png",
+        "source_path": "lab_assets/effects/magic_explosion/original_images/magic_explosion__self__image__v001.png",
+        "version": 1,
+        "width": 1254,
+        "height": 1254,
+        "provider": "self",
+        "prompt": "pixel art magical explosion effect, transparent background"
+      },
+      "created_at": "2026-07-25T19:41:06",
+      "updated_at": "2026-07-25T19:44:47"
+    }
+  },
+  "updated_at": "2026-07-25T19:44:47"
+}
