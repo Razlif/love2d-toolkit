@@ -1,1 +1,64 @@
-<!-- Static Asset Lab viewer shell. -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Asset Lab</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="lab-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">LOVE2D TOOLKIT</p>
+        <h1>Asset Lab</h1>
+      </div>
+      <div class="topbar-actions">
+        <span id="manifest-status" class="status-text">Loading manifest...</span>
+        <button id="reload-button" class="small-button" type="button">Refresh</button>
+      </div>
+    </header>
+
+    <main class="lab-layout">
+      <aside class="sidebar panel" aria-label="Asset browser">
+        <div class="panel-heading">
+          <div>
+            <p class="section-label">BROWSE</p>
+            <h2>Assets</h2>
+          </div>
+          <span id="asset-count" class="count-badge">0</span>
+        </div>
+        <div id="asset-tree" class="asset-tree"></div>
+        <div id="asset-warnings" class="asset-warnings"></div>
+      </aside>
+
+      <section class="preview-panel panel" aria-label="Asset preview">
+        <div class="preview-heading">
+          <div>
+            <p class="section-label">PREVIEW</p>
+            <h2 id="preview-title">Select an asset</h2>
+          </div>
+          <span id="preview-kind" class="kind-badge">NONE</span>
+        </div>
+        <div id="preview-stage" class="preview-stage">
+          <div class="empty-state">
+            <span class="empty-icon">+</span>
+            <p>Select an image or animation to inspect it.</p>
+          </div>
+        </div>
+        <p id="preview-caption" class="preview-caption">The selected file will appear here.</p>
+      </section>
+
+      <aside class="inspector panel" aria-label="Asset inspector">
+        <div id="inspector-empty" class="empty-state inspector-empty">
+          <p>Select an asset from the browser.</p>
+        </div>
+        <div id="inspector-content" class="inspector-content" hidden></div>
+      </aside>
+    </main>
+  </div>
+
+  <script src="manifest.js"></script>
+  <script src="lab.js"></script>
+</body>
+</html>

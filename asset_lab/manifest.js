@@ -1,4 +1,5 @@
-{
+// Generated from manifest.json. Do not edit by hand.
+window.ASSET_LAB_MANIFEST = {
   "version": 1,
   "assets": [
     {
@@ -175,4 +176,4 @@
   ],
   "updated_at": "2026-07-25T15:34:16",
   "orphans": []
-}
+};
