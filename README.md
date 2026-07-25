@@ -27,6 +27,8 @@ cd love2d-toolkit
 love .
 ```
 
+Press **Start** on the title screen to try the example game and cutscene.
+
 ## Start With The Agent
 
 Ask:
