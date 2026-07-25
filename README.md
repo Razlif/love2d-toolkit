@@ -11,6 +11,35 @@ It includes:
 
 The duck, slime, background, bomb, music, and cutscene are examples.
 
+## Requirements
+
+- Git
+- Love2D 11.5 or newer
+- Python 3.11 or newer
+- `lovec` for command-line previews and QA, if available
+- Provider API keys only when using external asset or audio services
+
+## Providers And `.env`
+
+`.env` is used by the Python Asset Lab helpers, not by the Love2D game.
+
+Create it from the template:
+
+```cmd
+copy .env.example .env
+```
+
+Add only the keys for the providers you use:
+
+```text
+PIXELLAB_API_KEY=...
+AUTOSPRITE_API_KEY=...
+FREESOUND_API_KEY=...
+```
+
+The `self` and `mock` providers do not need API keys. `.env` is ignored by
+Git; never commit real keys.
+
 ## Boot
 
 ```cmd
