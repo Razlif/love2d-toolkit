@@ -1,0 +1,23 @@
+{
+  "dry_run": true,
+  "action": "add-image-version",
+  "provider": "pixellab",
+  "type": "character",
+  "name": "barbarian_duck_wizard",
+  "prompt": "same duck wizard with a brighter hat",
+  "width": 64,
+  "height": 64,
+  "with_background": false,
+  "mock_image": null,
+  "mock_frames_dir": null,
+  "image_version": 2,
+  "mode": "with_reference",
+  "source_image_version": 1,
+  "source_image_path": "lab_assets/characters/barbarian_duck_wizard/original_images/barbarian_duck_wizard__pixellab__image__v001.png",
+  "planned_outputs": {
+    "trace_path": "lab_assets/characters/barbarian_duck_wizard/trace.jsonl",
+    "request_path": "lab_assets/characters/barbarian_duck_wizard/barbarian_duck_wizard__pixellab__image__v002__dry_run_20260725-145310__request.json",
+    "metadata_path": "lab_assets/characters/barbarian_duck_wizard/metadata.json",
+    "image_path": "lab_assets/characters/barbarian_duck_wizard/original_images/barbarian_duck_wizard__pixellab__image__v002.png"
+  }
+}

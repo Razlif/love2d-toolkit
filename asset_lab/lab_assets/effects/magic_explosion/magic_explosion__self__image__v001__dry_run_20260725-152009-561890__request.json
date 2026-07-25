@@ -1,0 +1,20 @@
+{
+  "dry_run": true,
+  "action": "create-new",
+  "provider": "self",
+  "type": "effect",
+  "name": "magic_explosion",
+  "prompt": "pixel art magical explosion effect, transparent background",
+  "width": 64,
+  "height": 64,
+  "with_background": false,
+  "mock_image": null,
+  "mock_frames_dir": null,
+  "image_version": 1,
+  "planned_outputs": {
+    "trace_path": "lab_assets/effects/magic_explosion/trace.jsonl",
+    "request_path": "lab_assets/effects/magic_explosion/magic_explosion__self__image__v001__dry_run_20260725-152009-561890__request.json",
+    "metadata_path": "lab_assets/effects/magic_explosion/metadata.json",
+    "image_path": "lab_assets/effects/magic_explosion/original_images/magic_explosion__self__image__v001.png"
+  }
+}

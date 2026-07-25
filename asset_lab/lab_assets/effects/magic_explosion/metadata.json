@@ -1,0 +1,16 @@
+{
+  "last_result": {
+    "id": "magic_explosion__self__burst_from_image_v001__v001",
+    "provider": "self",
+    "name": "burst",
+    "version": 1,
+    "source_image_version": 1,
+    "source_image_path": "lab_assets/effects/magic_explosion/original_images/magic_explosion__self__image__v001.png",
+    "sheet_path": "lab_assets/effects/magic_explosion/sprite_sheets/magic_explosion__self__burst_from_image_v001__v001.png",
+    "gif_path": "lab_assets/effects/magic_explosion/animation_gifs/magic_explosion__self__burst_from_image_v001__v001.gif",
+    "prompt": "4-frame transparent pixel art sprite sheet of the magic explosion bursting outward then fading",
+    "frame_count": 4,
+    "fps": 8,
+    "status": "pending_self_creation"
+  }
+}
