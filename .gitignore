@@ -28,7 +28,7 @@ asset_lab/audio_library/imported/*
 asset_lab/audio_library/catalog.json
 asset_lab/audio_catalog.js
 
-# Local Graphify context artifacts.
+# Local analysis artifacts.
 graphify-out/
 .graphify*
 

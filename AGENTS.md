@@ -80,15 +80,8 @@ love . --cutscene duck_slime_date
 Keep dialogue, movement, camera, effects, music, and sound cues in the scene
 timeline. Use literal command names and valid asset IDs.
 
-## Debugging And Graphify
+## Debugging
 
 Useful launch flags are `--debug`, `--debug-masks`, `--debug-sensors`,
 `--debug-collisions`, `--debug-entities`, `--debug-camera`, `--debug-input`,
 and `--debug-state`.
-
-If the `graphify` command is installed and `graphify-out/graph.json` exists,
-use `graphify query`, `graphify path`, or `graphify explain` for codebase
-context. Graphify is optional. If either the command or graph is missing,
-continue with normal file inspection. Graph output is local context and must
-not be committed. After meaningful code changes, run `graphify update .` when
-Graphify is available.

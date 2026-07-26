@@ -64,5 +64,4 @@ information without changing gameplay responses. Collision remains report-only.
   are broad prechecks; masks provide the pixel overlap report.
 
 Keep traces, test output, and error messages attached to the change being
-debugged. Do not commit API keys, local audio catalogs, previews, save files,
-or generated Graphify output.
+debugged. Do not commit API keys, local audio catalogs, previews, or save files.

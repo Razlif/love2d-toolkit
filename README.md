@@ -15,7 +15,7 @@ The duck, slime, background, bomb, music, and cutscene are examples.
 
 - Git
 - Love2D 11.5 or newer
-- Python 3.11 or newer
+- Python 3.11 or newer for Asset Lab and QA helpers
 - `love` for running the game; `lovec` is optional
 - Provider API keys only when using external asset or audio services
 
@@ -26,6 +26,9 @@ git clone https://github.com/Razlif/love2d-toolkit.git
 cd love2d-toolkit
 love .
 ```
+
+Love2D is enough to run the game. Python is only needed for Asset Lab and QA
+helpers.
 
 Linux/macOS users can install Python dependencies with:
 
@@ -40,14 +43,9 @@ Windows users can use `python` and activate the virtual environment with
 
 Press **Start** on the title screen to try the example game and cutscene.
 
-## Start With The Agent
-
-Ask:
+After booting, ask the agent:
 
 > Read the repository and root documentation. Explain how this toolkit is organized.
-
-If Graphify is installed and `graphify-out/graph.json` exists, the agent can
-use it for local context. Graphify is optional.
 
 ## Typical Agent Workflow
 
@@ -166,8 +164,7 @@ python asset_lab/helpers/audio_search.py --help
 python asset_lab/helpers/promote_audio_asset.py --help
 ```
 
-Linux/macOS users can use `python3` instead of `python`. Linux filenames are
-case-sensitive.
+Linux/macOS users can use `python3` instead of `python`.
 
 The agent should read the manifest first and never guess asset paths.
 
@@ -211,7 +208,7 @@ Ask the agent to read the lore before changing game behavior or writing scenes.
 - **Collision:** masks and sensors report overlaps; there is no physics or automatic response.
 - **Parallax:** the system exists; the example uses basic background configuration.
 - **Dev tools:** the folder exists; export and packaging tools are not implemented.
-- **Agent orchestration:** the repository provides conventions and docs, not a built-in coding agent.
+- **QA and testing:** core systems, runtime assets, Asset Lab, and cutscene validation checks are included.
 
 ## Supported Cutscene Commands
 
