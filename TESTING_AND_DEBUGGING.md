@@ -8,6 +8,12 @@ Run the Python suites from the repository root:
 python -m unittest qa.asset_checks.test_asset_lab qa.game_checks.test_cutscene_engine
 ```
 
+Run all Python checks:
+
+```cmd
+python -m unittest discover -s . -p "test_*.py"
+```
+
 Run the Love2D harness from `qa/love_checks`:
 
 ```cmd
@@ -44,6 +50,86 @@ love . --debug-masks --debug-sensors --debug-collisions
 
 The flags show input, camera, state, entity, mask, sensor, and collision
 information without changing gameplay responses. Collision remains report-only.
+
+## Agent QA Driver
+
+The file-based QA driver can run a cutscene and collect events, a final state,
+and a matching screenshot:
+
+```cmd
+python qa/game_driver/drive_game.py --cutscene duck_slime_date
+```
+
+Provide a JSONL actions file for gameplay or scripted control:
+
+```json
+{"id":"move_1","command":"hold","key":"right","duration":0.8}
+{"id":"view_1","command":"snapshot","name":"after_move"}
+```
+
+Then run:
+
+```cmd
+python qa/game_driver/drive_game.py --commands path/to/commands.jsonl
+```
+
+Each run is stored under `qa/runtime_logs/` with `events.jsonl`,
+`results.jsonl`, snapshots, screenshots, and a final report. Runtime logs are
+local QA artifacts and are ignored by Git. Use `python3` on Linux/macOS.
+
+## Managed QA Session
+
+Use the process manager when the user wants to keep one game session open for
+manual play and agent inspection:
+
+```cmd
+python qa/run_game.py start
+python qa/run_game.py status
+python qa/run_game.py latest
+python qa/run_game.py stop
+```
+
+The manager records the Love2D process, run ID, executable, project path,
+stdout, stderr, and QA artifacts. It does not add networking; the existing
+file bridge remains the game-facing command transport.
+
+## Live Agent Bridge
+
+Start a managed session, then expose that session to a local agent over
+localhost HTTP:
+
+```cmd
+python qa/run_game.py start
+python qa/run_game.py bridge start
+python qa/run_game.py bridge status
+python qa/run_game.py bridge stop
+```
+
+The bridge prints no continuous stream. It provides token-protected endpoints
+for status, snapshots, incremental events/results, latest screenshots, and
+commands. The token and port are stored in the active run's `bridge.json`.
+The agent uses the existing QA command format and the game still receives
+commands through `InputManager`.
+
+This is a local collaboration tool, not a public server. It binds only to
+`127.0.0.1`; do not expose it to a network. Use the run folder's `bridge.log`
+and `stdout.log`/`stderr.log` when startup fails.
+
+The dependency-free client can query it from another terminal:
+
+```cmd
+python qa/game_driver/bridge_client.py qa/runtime_logs/RUN_ID/bridge.json status
+python qa/game_driver/bridge_client.py qa/runtime_logs/RUN_ID/bridge.json events
+python qa/game_driver/bridge_client.py qa/runtime_logs/RUN_ID/bridge.json send "{\"id\":\"move_1\",\"command\":\"press\",\"key\":\"right\"}"
+```
+
+Available bridge operations are status, latest snapshot, incremental events,
+incremental results, latest screenshot, and validated command submission. The
+bridge does not directly edit entities or bypass `InputManager`.
+
+Command submission is asynchronous: an accepted command is not complete until
+its matching record appears in `results.jsonl`. Poll `results` or `events` and
+carry the returned `next` cursor into the next request.
 
 ## Common Failures
 

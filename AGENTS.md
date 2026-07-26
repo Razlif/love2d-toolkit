@@ -15,6 +15,17 @@ architecture when an existing system or folder already fits.
 - `qa/`: automated checks and Love2D harnesses.
 - `dev_tools/`: future export and packaging tools.
 
+When Love2D API behavior is uncertain, query the local reference before
+guessing:
+
+```cmd
+python dev_tools/love_docs/love_docs.py search camera
+python dev_tools/love_docs/love_docs.py lookup love.graphics.captureScreenshot
+```
+
+The reference is pinned to Love2D 11.5 and is for agent/developer context;
+the game does not load it at runtime.
+
 The repository root is the Love2D source root. Keep root `main.lua` and
 `conf.lua` small; route runtime behavior through `game/main.lua` and the state
 manager.
@@ -30,6 +41,27 @@ manager.
   response; do not add Love2D physics to the MVP.
 - Cutscene actors reuse rendering systems but never gameplay controllers, AI,
   or gameplay collision responses.
+
+## Available Runtime Systems
+
+Use these existing systems before adding a new one:
+
+- `states_manager`: title, playground, pause overlay, and cutscene transitions.
+- `asset_loader`: loads promoted files through `game_data/asset_manifest.lua`.
+- `animation_manager`: sprite-sheet playback driven by `dt`.
+- `input_manager`: named held and one-shot actions for gameplay and UI.
+- `movement_manager` and `position_manager`: shared controller intent and 2.5D `x`, `ground_y`, `z` movement.
+- `draw_order`: stable layer and ground-position sorting.
+- `camera_manager` and `parallax`: camera following, bounds, shake, and layered backgrounds.
+- `timer_manager`: deterministic delays, repeats, and cooldowns.
+- `mask_creation` and `collision_detection`: cached mask/sensor overlap reports only.
+- `audio_manager`: named music and sound playback from the generated manifest.
+- `ui/`: theme, text, buttons, menus, dialogue cards, and pause UI.
+- `save_manager`: versioned local JSON saves, not yet connected to a save menu.
+- `qa_telemetry` and `qa_bridge`: event logs, snapshots, screenshots, and validated QA commands.
+
+The current duck, slime, bomb, background, and cutscene are integration
+examples. They are disposable demo content, not required game content.
 
 ## Asset Lab Workflow
 
@@ -85,3 +117,39 @@ timeline. Use literal command names and valid asset IDs.
 Useful launch flags are `--debug`, `--debug-masks`, `--debug-sensors`,
 `--debug-collisions`, `--debug-entities`, `--debug-camera`, `--debug-input`,
 and `--debug-state`.
+
+For a persistent user-and-agent QA session, use:
+
+```cmd
+python qa/run_game.py start
+python qa/run_game.py status
+python qa/run_game.py latest
+python qa/run_game.py stop
+```
+
+Inspect stable results with `python qa/game_driver/logs.py inspect RUN_ID`
+and compare runs with `python qa/game_driver/compare_runs.py OLD_ID NEW_ID`.
+
+For collaborative live inspection, start the managed game and local bridge:
+
+```cmd
+python qa/run_game.py start
+python qa/run_game.py bridge start
+```
+
+Read the run's `bridge.json` for the localhost port and bearer token. Use the
+bridge for status, snapshots, incremental events/results, screenshots, and
+validated input commands. Never mutate game entities directly and never bind
+the bridge beyond `127.0.0.1`.
+
+Bridge command submission is asynchronous. A `202` response means the command
+was accepted; wait for its matching result in `results.jsonl` or through the
+bridge result endpoint before judging the outcome.
+
+## Current Status
+
+- Rendering, animation, input, movement, camera, audio, UI, masks, sensors, and report-only collision are wired.
+- The playground and one cutscene provide working integration examples.
+- Asset Lab supports image, animation, audio search/import, previews, and promotion.
+- QA supports scripted runs, persistent sessions, stable logs, screenshots, snapshots, and local agent inspection.
+- Physics responses, generic level loading, save menus, settings screens, packaging, and AutoSprite generation remain future work.

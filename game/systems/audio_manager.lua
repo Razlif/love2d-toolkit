@@ -4,6 +4,7 @@ local AudioManager = {
   music_sources = {},
   sound_sources = {},
   current_music = nil,
+  current_music_id = nil,
   current_music_base_volume = 1,
   music_volume = 1,
   sfx_volume = 1,
@@ -39,6 +40,7 @@ function AudioManager.play_music(id, options)
   source:setVolume(AudioManager.current_music_base_volume * AudioManager.music_volume)
   source:play()
   AudioManager.current_music = source
+  AudioManager.current_music_id = id
   return source
 end
 
@@ -51,6 +53,7 @@ function AudioManager.stop_music(fade_seconds)
   else
     AudioManager.current_music:stop()
     AudioManager.current_music = nil
+    AudioManager.current_music_id = nil
   end
 end
 
@@ -92,6 +95,7 @@ function AudioManager.update(dt)
     AudioManager.fading_music = nil
     if AudioManager.current_music == fade.source then
       AudioManager.current_music = nil
+      AudioManager.current_music_id = nil
       AudioManager.current_music_base_volume = 1
     end
   end
@@ -102,8 +106,16 @@ function AudioManager.stop_all()
     AudioManager.current_music:stop()
   end
   AudioManager.current_music = nil
+  AudioManager.current_music_id = nil
   AudioManager.current_music_base_volume = 1
   AudioManager.fading_music = nil
+end
+
+function AudioManager.debug_snapshot()
+  return {
+    music = AudioManager.current_music_id,
+    music_playing = AudioManager.current_music and AudioManager.current_music:isPlaying() or false
+  }
 end
 
 return AudioManager

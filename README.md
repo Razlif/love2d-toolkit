@@ -49,6 +49,10 @@ After booting, ask the agent:
 
 > Read the repository and root documentation. Explain how this toolkit is organized.
 
+The agent can then use Asset Lab to create and preview assets, promote selected
+assets into `media_assets/`, build game states and levels, and create validated
+cutscenes from the same runtime systems.
+
 ## Typical Agent Workflow
 
 1. Set up the repository and ask the agent to read the code, root docs, and
@@ -81,9 +85,25 @@ After booting, ask the agent:
 - **Masks and sensors:** create cached masks and report overlap events.
 - **Camera and parallax:** follow entities, scroll the world, and support layered backgrounds.
 - **Audio and timers:** handle music, sound effects, cooldowns, and timed events.
+- **UI:** provides the title screen, pause overlay, dialogue cards, buttons, menus, and theme.
+- **Save manager:** provides versioned local JSON saves; no save menu is connected yet.
+- **QA telemetry:** records stable events, snapshots, results, and screenshots for QA runs.
+- **QA bridge:** lets a local agent inspect a running game and submit normal input commands.
 
 Collision is report-only. The game decides what an overlap should do. The
 Love2D physics engine is not part of the current template.
+
+## Love2D API Reference
+
+The repository includes a searchable offline Love2D 11.5 API reference for
+agents. Use it when the behavior or signature of a Love2D function is unclear:
+
+```cmd
+python dev_tools/love_docs/love_docs.py search camera
+python dev_tools/love_docs/love_docs.py lookup love.graphics.captureScreenshot
+```
+
+See [dev_tools/love_docs/README.md](dev_tools/love_docs/README.md).
 
 ## Debug Mode
 
@@ -103,6 +123,17 @@ love . --debug-entities --debug-masks --debug-sensors --debug-collisions
 
 Debug mode shows positions, input, camera state, entities, masks, sensors, and
 collision reports. It does not add physics or change collision responses.
+
+For persistent collaborative QA:
+
+```bash
+python qa/run_game.py start
+python qa/run_game.py bridge start
+python qa/run_game.py bridge status
+```
+
+The bridge is localhost-only and token-protected. Its port and token are in the
+active run's `qa/runtime_logs/<run_id>/bridge.json`.
 
 ## Asset Lab
 
@@ -209,8 +240,9 @@ Ask the agent to read the lore before changing game behavior or writing scenes.
 - **UI:** title menu, pause, dialogue, and theme work; settings, inventory, and other screens are placeholders.
 - **Collision:** masks and sensors report overlaps; there is no physics or automatic response.
 - **Parallax:** the system exists; the example uses basic background configuration.
-- **Dev tools:** the folder exists; export and packaging tools are not implemented.
+- **Dev tools:** the offline Love2D 11.5 API reference is implemented; export and packaging tools are not implemented.
 - **QA and testing:** core systems, runtime assets, Asset Lab, and cutscene validation checks are included.
+- **Live QA bridge:** a local token-protected bridge can let an agent inspect a running game and send normal QA input commands.
 
 ## Supported Cutscene Commands
 

@@ -76,3 +76,31 @@ full commands.
 Scenes are declarative Lua timelines. They reuse asset, animation, position,
 camera, audio, effect, and dialogue systems, but do not run gameplay AI or
 controllers. See [CUTSCENE_ENGINE_GUIDE.md](CUTSCENE_ENGINE_GUIDE.md).
+
+## API Reference
+
+The repository includes a pinned Love2D 11.5 API index under
+`dev_tools/love_docs/`. Query it before guessing about callbacks or function
+signatures:
+
+```cmd
+python dev_tools/love_docs/love_docs.py lookup love.update
+python dev_tools/love_docs/love_docs.py lookup love.graphics.newQuad
+python dev_tools/love_docs/love_docs.py lookup love.graphics.captureScreenshot
+```
+
+It also covers `love.draw`, `love.graphics.newImage`, `love.filesystem`, and
+input callbacks. The game does not load the reference at runtime.
+
+## QA And Agent Inspection
+
+The template includes two QA paths:
+
+- Scripted runs use `qa/game_driver/drive_game.py` and produce isolated logs,
+  snapshots, screenshots, and result bundles.
+- Persistent sessions use `qa/run_game.py`. The optional localhost bridge lets
+  an agent inspect the running game and submit normal keyboard or mouse actions.
+
+The bridge is asynchronous and frame-oriented: submit a command, then read its
+matching result and snapshot. It does not teleport entities or replace game
+systems. See [TESTING_AND_DEBUGGING.md](TESTING_AND_DEBUGGING.md).

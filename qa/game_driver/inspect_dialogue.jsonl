@@ -1,0 +1,3 @@
+{"id":"start_cutscene","command":"press","key":"return"}
+{"id":"wait_for_dialogue","command":"wait","seconds":2}
+{"id":"dialogue_frame","command":"snapshot","name":"dialogue_frame"}

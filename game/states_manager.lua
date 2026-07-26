@@ -6,6 +6,8 @@ local StatesManager = {
   overlay_name = nil
 }
 
+local Telemetry = require("game.systems.qa_telemetry")
+
 local states = {
   start = require("game.game_states.start"),
   playground = require("game.game_states.playground"),
@@ -24,6 +26,7 @@ function StatesManager.change(name, ...)
   end
   StatesManager.current = next_state
   StatesManager.current_name = name
+  Telemetry.emit("state_changed", { state = name })
   if next_state.enter then
     next_state.enter(...)
   end

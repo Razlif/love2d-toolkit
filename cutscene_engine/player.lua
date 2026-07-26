@@ -8,6 +8,7 @@ local DrawOrder = require("game.systems.draw_order")
 local Effect = require("game.entities.effects.effect")
 local ParallaxManager = require("game.systems.parallax")
 local AudioManager = require("game.systems.audio_manager")
+local Telemetry = require("game.systems.qa_telemetry")
 
 local Player = {}
 Player.__index = Player
@@ -35,6 +36,7 @@ function Player.new(scene, options)
     return_state = options.return_state or "playground",
     fade = { alpha = 0, color = { 0, 0, 0 } }
   }, Player)
+  Telemetry.emit("scene_started", { scene = scene.id })
 
   for id, data in pairs(scene.actors or {}) do
     data.id = id
@@ -101,13 +103,16 @@ function Player:start_next_command()
   local command = self.scene.timeline[self.timeline_index]
   if not command then
     self.finished = true
+    Telemetry.emit("scene_finished", { scene = self.scene.id, completed = true })
     return
   end
   Commands.validate(command, self.timeline_index)
   self.timeline_index = self.timeline_index + 1
   self.active_command = Commands.begin(self, command)
+  Telemetry.emit("command_started", { scene = self.scene.id, index = self.timeline_index - 1, command = command.command })
   if self.active_command.done then
     self.active_command = nil
+    Telemetry.emit("command_completed", { scene = self.scene.id, index = self.timeline_index - 1, command = command.command })
     self:start_next_command()
   end
 end
@@ -127,6 +132,7 @@ function Player:update(dt)
     if Commands.update(self, command, self.active_command, dt) then
       if command.command == "say" then self.dialogue = nil end
       if command.command == "move" then self.actors[command.actor]:idle() end
+      Telemetry.emit("command_completed", { scene = self.scene.id, index = self.timeline_index - 1, command = command.command })
       self.active_command = nil
     end
   end
@@ -155,6 +161,8 @@ end
 function Player:skip()
   self.finished = true
   self.dialogue = nil
+  Telemetry.emit("scene_skipped", { scene = self.scene.id })
+  Telemetry.emit("scene_finished", { scene = self.scene.id, completed = false, skipped = true })
 end
 
 function Player:is_finished()
@@ -165,7 +173,16 @@ function Player:get_debug_context()
   local entities = {}
   for _, id in ipairs(self.actor_order) do entities[#entities + 1] = self.actors[id] end
   for _, effect in ipairs(self.effects) do entities[#entities + 1] = effect end
-  return { entities = entities, camera = self.camera, collision_events = {} }
+  return {
+    entities = entities,
+    camera = self.camera,
+    collision_events = {},
+    scene = self.scene.id,
+    timeline_index = self.timeline_index,
+    active_command = self.active_command and self.scene.timeline[self.timeline_index - 1].command or nil,
+    dialogue = self.dialogue and { text = self.dialogue.text, speaker = self.dialogue.speaker } or nil,
+    finished = self.finished
+  }
 end
 
 return Player

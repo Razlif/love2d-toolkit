@@ -1,0 +1,7 @@
+{
+  "love_version": "11.5",
+  "source": "https://github.com/love2d-community/love-api",
+  "source_ref": "447486c14b7af6ffb610c47d9b800703b4e628f4",
+  "generated_at": "2026-07-26T18:41:13+00:00",
+  "generator": "convert_api.lua"
+}

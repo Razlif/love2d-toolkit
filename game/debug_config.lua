@@ -13,7 +13,9 @@ local function base_config()
     camera = false,
     input = false,
     state = false,
-    cutscene_id = nil
+    cutscene_id = nil,
+    qa = false,
+    qa_run_dir = nil
   }
 end
 
@@ -52,6 +54,12 @@ function DebugConfig.from_args(arguments)
     elseif argument == "--debug-state" then
       config.enabled = true
       config.state = true
+    elseif argument == "--qa" then
+      config.qa = true
+    elseif argument == "--qa-run-dir" then
+      config.qa = true
+      config.qa_run_dir = arguments[index + 1]
+      index = index + 1
     end
     if argument == "--cutscene" then
       config.cutscene_id = arguments[index + 1]

@@ -5,6 +5,8 @@ __pycache__/
 *.py[cod]
 qa/reports/*
 !qa/reports/.gitkeep
+qa/runtime_logs/*
+!qa/runtime_logs/.gitkeep
 
 asset_lab/lab_assets/*
 !asset_lab/lab_assets/.gitkeep
@@ -31,6 +33,9 @@ asset_lab/audio_catalog.js
 # Local analysis artifacts.
 graphify-out/
 .graphify*
+
+# Temporary Love2D API conversion files.
+dev_tools/love_docs/*.tmp
 
 # Local Codex skills/config.
 .codex/
