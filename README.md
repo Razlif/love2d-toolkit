@@ -43,6 +43,8 @@ Windows users can use `python` and activate the virtual environment with
 
 Press **Start** on the title screen to try the example game and cutscene.
 
+![Love2D Toolkit title screen](game_title_screen.png)
+
 After booting, ask the agent:
 
 > Read the repository and root documentation. Explain how this toolkit is organized.

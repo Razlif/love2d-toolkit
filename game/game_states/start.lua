@@ -54,9 +54,6 @@ function Start.enter()
   Start.menu = Menu.new({
     { label = "Start", on_confirm = function()
       states_manager().change("cutscene", "duck_slime_date")
-    end },
-    { label = "Playground", on_confirm = function()
-      states_manager().change("playground")
     end }
   }, layout)
 end
