@@ -4,6 +4,8 @@ import subprocess
 import sys
 import unittest
 
+from .love_runtime import find_love_executable
+
 
 ROOT = Path(__file__).resolve().parents[2]
 PYTHON = sys.executable
@@ -44,9 +46,8 @@ class CutsceneEngineTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
 
     def test_root_preview_stays_running(self) -> None:
-        love = Path(r"C:\Program Files\LOVE\lovec.exe")
         process = subprocess.Popen(
-            [str(love), ".", "--cutscene", "duck_slime_intro"],
+            [find_love_executable(), ".", "--cutscene", "duck_slime_intro"],
             cwd=ROOT,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,

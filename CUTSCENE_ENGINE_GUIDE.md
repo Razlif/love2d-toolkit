@@ -9,7 +9,7 @@ Validate first:
 
 ```cmd
 python cutscene_engine/tools/validate_scene.py duck_slime_date
-lovec . --cutscene duck_slime_date
+love . --cutscene duck_slime_date
 ```
 
 Escape skips the scene and returns to the previous state. Completion also

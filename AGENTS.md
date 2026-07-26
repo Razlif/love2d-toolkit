@@ -74,7 +74,7 @@ Scene files live in `cutscene_engine/scenes/`. Validate before previewing:
 
 ```cmd
 python cutscene_engine/tools/validate_scene.py duck_slime_date
-lovec . --cutscene duck_slime_date
+love . --cutscene duck_slime_date
 ```
 
 Keep dialogue, movement, camera, effects, music, and sound cues in the scene

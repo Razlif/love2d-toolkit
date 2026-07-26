@@ -12,9 +12,12 @@ Run the Love2D harness from `qa/love_checks`:
 
 ```cmd
 cd qa/love_checks
-lovec .
+love .
 cd ../..
 ```
+
+Use `python3` instead of `python` on Linux/macOS. Set `LOVE_EXECUTABLE` if
+Love2D is installed outside `PATH`.
 
 Validate a cutscene by ID:
 

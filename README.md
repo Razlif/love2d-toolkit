@@ -16,7 +16,7 @@ The duck, slime, background, bomb, music, and cutscene are examples.
 - Git
 - Love2D 11.5 or newer
 - Python 3.11 or newer
-- `lovec` for command-line previews and QA, if available
+- `love` for running the game; `lovec` is optional
 - Provider API keys only when using external asset or audio services
 
 ## Boot
@@ -26,6 +26,17 @@ git clone https://github.com/Razlif/love2d-toolkit.git
 cd love2d-toolkit
 love .
 ```
+
+Linux/macOS users can install Python dependencies with:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install -r asset_lab/requirements.txt
+```
+
+Windows users can use `python` and activate the virtual environment with
+`.venv\Scripts\activate`.
 
 Press **Start** on the title screen to try the example game and cutscene.
 
@@ -58,6 +69,41 @@ use it for local context. Graphify is optional.
 
 7. Run the game, tests, and debug views. Continue iterating with the agent.
 
+## Built-In Systems
+
+- **State manager:** switches between title, playground, pause, and cutscene states.
+- **Asset loader:** loads promoted runtime assets from the generated manifest.
+- **Animation manager:** plays sprite-sheet animations using `dt`.
+- **Input manager:** provides named keyboard and mouse actions to controllers and UI.
+- **Movement manager:** applies controller intent to entities.
+- **Position manager:** handles 2.5D `x`, `ground_y`, and `z` positions.
+- **Draw order:** sorts world entities by layer and ground position.
+- **Masks and sensors:** create cached masks and report overlap events.
+- **Camera and parallax:** follow entities, scroll the world, and support layered backgrounds.
+- **Audio and timers:** handle music, sound effects, cooldowns, and timed events.
+
+Collision is report-only. The game decides what an overlap should do. The
+Love2D physics engine is not part of the current template.
+
+## Debug Mode
+
+Launch the game with:
+
+```bash
+love . --debug
+```
+
+This enables the debug overlay and all debug categories. Use focused flags
+when needed:
+
+```bash
+love . --debug-input --debug-camera --debug-state
+love . --debug-entities --debug-masks --debug-sensors --debug-collisions
+```
+
+Debug mode shows positions, input, camera state, entities, masks, sensors, and
+collision reports. It does not add physics or change collision responses.
+
 ## Asset Lab
 
 Open `asset_lab/index.html` in a browser.
@@ -89,6 +135,12 @@ Create the environment file from the template:
 copy .env.example .env
 ```
 
+On Linux/macOS:
+
+```bash
+cp .env.example .env
+```
+
 Add only the keys for the providers you use:
 
 ```text
@@ -114,6 +166,9 @@ python asset_lab/helpers/audio_search.py --help
 python asset_lab/helpers/promote_audio_asset.py --help
 ```
 
+Linux/macOS users can use `python3` instead of `python`. Linux filenames are
+case-sensitive.
+
 The agent should read the manifest first and never guess asset paths.
 
 See [ASSET_LAB_GUIDE.md](ASSET_LAB_GUIDE.md) and
@@ -127,8 +182,13 @@ Ask the agent to edit a scene, validate it, and preview it:
 
 ```cmd
 python cutscene_engine/tools/validate_scene.py duck_slime_date
-lovec . --cutscene duck_slime_date
+love . --cutscene duck_slime_date
+love qa/love_checks
 ```
+
+Use `python3` on Linux/macOS. If Love2D is not on `PATH`, set
+`LOVE_EXECUTABLE` to its full path before running the Python QA tests. Some
+Linux distributions also require SDL/OpenAL packages for Love2D audio.
 
 The engine reuses game actors, animation, movement, camera, dialogue, effects,
 music, and sound.
@@ -141,11 +201,23 @@ Use `game_lore/` for story, characters, world rules, and design context.
 
 Ask the agent to read the lore before changing game behavior or writing scenes.
 
+## Current Status
+
+- **AutoSprite:** account preparation exists; generation and animation are not implemented.
+- **Save system:** the module exists; no save/load menu is connected yet.
+- **Levels:** the playground example is active; no generic level loader or editor yet.
+- **Game states:** title, playground, pause, and cutscene are wired; many other states are placeholders.
+- **UI:** title menu, pause, dialogue, and theme work; settings, inventory, and other screens are placeholders.
+- **Collision:** masks and sensors report overlaps; there is no physics or automatic response.
+- **Parallax:** the system exists; the example uses basic background configuration.
+- **Dev tools:** the folder exists; export and packaging tools are not implemented.
+- **Agent orchestration:** the repository provides conventions and docs, not a built-in coding agent.
+
 ## Supported Cutscene Commands
 
-`wait` · `move` · `face` · `play_animation` · `say` · `camera_move` ·
-`camera_follow` · `camera_shake` · `play_effect` · `fade` · `play_sound` ·
-`play_music` · `stop_music`
+`wait`, `move`, `face`, `play_animation`, `say`, `camera_move`,
+`camera_follow`, `camera_shake`, `play_effect`, `fade`, `play_sound`,
+`play_music`, `stop_music`
 
 ## More Docs
 
